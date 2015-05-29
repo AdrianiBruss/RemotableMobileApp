@@ -143,7 +143,7 @@ $(function () {
 
         var link = $(this).attr('data-mobile-menu-item');
 
-        //socket.emit('changeLinkMobile', link);
+        socket.emit('changeLinkMobile', link);
 
     });
 
@@ -168,15 +168,6 @@ $(function () {
             console.log('swipedown');
             socket.emit('swipeMobile', 'down');
         });
-
-
-    //$('#test').on('click', function(){
-    //
-    //    console.log('click');
-    //    socket.emit('test', Math.floor((Math.random() * 10) + 1));
-    //    //$.post("/postest", { message: Math.floor((Math.random() * 10) + 1) });
-    //
-    //});
 
 
 });
