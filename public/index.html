@@ -1,0 +1,46 @@
+<html>
+<head>
+    <title>Remotable site</title>
+    <link rel="stylesheet" href="css/main.css"/>
+    <meta name="viewport" content="width=device-width">
+</head>
+<body>
+
+<h1>Remotable site</h1>
+<div id="connected">Connected</div>
+
+<div id="form_connection">
+
+    <form id="form_co" action="#">
+        <input id="input" type="text"/>
+        <a id="submit" href="#">Connect Device</a>
+    </form>
+
+</div>
+
+<div id="wrapper">
+
+    <nav id="menu">
+        <ul>
+            <li class="menu-item" data-mobile-menu-item="page1"><a href="#">Section 1</a></li>
+            <li class="menu-item" data-mobile-menu-item="page2"><a href="#">Section 2</a></li>
+            <li class="menu-item" data-mobile-menu-item="page3"><a href="#">Section 3</a></li>
+        </ul>
+    </nav>
+
+    <div id="slider">
+        <h2>Swipe here to slide carousel</h2>
+    </div>
+
+</div>
+
+
+<script src="vendors/jquery.js"></script>
+<script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script src="vendors/jquery.swipe.js"></script>
+<script src="//192.168.10.16:3303/socket.io/socket.io.js"></script>
+<!--<script src="http://192.168.20.253:3303/socket.io/socket.io.js"></script>-->
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha512.js"></script>
+<script src="scripts/script.js"></script>
+</body>
+</html>
