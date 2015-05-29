@@ -7,3 +7,6 @@
     text-align: center;
     line-height: 170px;
 }
+#form_connection{
+    display:none;
+}
