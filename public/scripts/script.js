@@ -17,26 +17,64 @@ $(function () {
         return localStorage.getItem('remotableSitesMobile');
     }
 
-    function setLocal(sites, url,  hash) {
+    function setLocal(sites, url, hash) {
         localStorage.setItem('remotableSitesMobile', JSON.stringify(saveSite(sites, url, hash)));
     }
 
-    function connectionToSite(url, key){
+    function showWrapper() {
+        $('#connected').css('color', 'greenyellow');
+        $('#form_connection').css('display', 'none');
+        $('#wrapper').css('display', 'block');
+    }
+
+
+    function connectionToSite(url, hash, action) {
 
         // Connection au serveur
-         socket = io('ws://'+url+'');
-        console.log(socket);
+        socket = io('ws://' + url + '');
         //var socket = io('ws://192.168.20.253:3303');
         // envoie la clé au serveur
-        socket.emit('mobileCo', key, function(data){
+
+        socket.emit('mobileCo', hash, function (data) {
+
             console.log(data);
+
+            if (data == 'mobileConnection') {
+
+
+                if (action == 'add') {
+
+                    showWrapper();
+
+                    //stocke dans le localStorage le site
+                    if (local == null) {
+                        console.log('saving to new local .. ');
+                        var sites = [];
+                        setLocal(sites, url_site, hash);
+
+                    } else {
+                        console.log('updating local .. ');
+                        setLocal(websites, url_site, hash);
+
+                    }
+
+                } else {
+
+                    console.log('reconnection');
+
+                    showWrapper();
+
+                }
+
+            }
+
         });
 
     }
 
 
     // --------------------------------------------------
-    var key;
+    var hash;
     var socket;
 
     // --------------------------------------------------
@@ -51,20 +89,16 @@ $(function () {
 
         console.log(websites);
 
-        for(var i=0; i < websites.length; i++){
+        for (var i = 0; i < websites.length; i++) {
 
             $('#sites_list').append('<li>' +
-            '<a href="#" class="site-item" data-server="'+websites[i].name+'" data-key="'+websites[i].key+'">'+websites[i].name+'</a>' +
+            '<a href="#" class="site-item" data-server="' + websites[i].name + '" data-hash="' + websites[i].hash + '">' + websites[i].name + '</a>' +
             '</li>');
 
         }
 
     }
 
-    // --------------------------------------------------
-    //// Connection au serveur
-    //var socket = io('ws://192.168.10.16:3303');
-    ////var socket = io('ws://192.168.20.253:3303');
 
     // --------------------------------------------------
     // Ajout de nouveau site
@@ -82,49 +116,20 @@ $(function () {
         url_site = $('#url_input').val();
 
         // encrypte la clé en sha512
-        key = CryptoJS.SHA512($('#input').val());
+        hash = CryptoJS.SHA512($('#key_input').val()).toString();
 
-        connectionToSite(url_site, key);
-
-        // si la connexion s'est bien faite alors on stocke le site
+        // connexion au serveur
+        connectionToSite(url_site, hash, 'add');
 
     });
-
-    // en attente de la connexion du mobile
-    //socket.on('mobileConnected', function (res) {
-    //
-    //    // le mobile est connecté au serveur
-    //    if (res.data == 'ok') {
-    //        $('#connected').css('color', 'greenyellow');
-    //        $('#form_connection').css('display', 'none');
-    //        $('#wrapper').css('display', 'block');
-    //
-    //        //stocke dans le localStorage le site
-    //
-    //        // à l'ajout d'un nouveau site
-    //
-    //        //check localStorage
-    //        if (local == null) {
-    //            console.log('saving to new local .. ');
-    //            var sites = [];
-    //            setLocal(sites, url_site, key);
-    //
-    //        } else {
-    //            console.log('updating local .. ');
-    //            setLocal(websites, url_site, key);
-    //
-    //        }
-    //
-    //    }
-    //
-    //});
 
 
     // --------------------------------------------------
     // Reconnexion à un site existant
-    $('.site-item').on('click', function(){
+    $('.site-item').on('click', function () {
 
-        connectionToSite($(this).attr('data-server'), $(this).attr('data-key') );
+        // reconnexion au serveur
+        connectionToSite($(this).attr('data-server'), $(this).attr('data-hash'), 'reco');
 
     });
 
@@ -147,21 +152,21 @@ $(function () {
     $('#slider')
         .on('swiperight', function () {
             console.log('swiperight');
-            //socket.emit('swipeMobile', 'next');
+            socket.emit('swipeMobile', 'next');
 
         })
         .on('swipeleft', function () {
             console.log('swipeleft');
-            //socket.emit('swipeMobile', 'prev');
+            socket.emit('swipeMobile', 'prev');
         })
         .on('swipeup', function () {
             console.log('swipeup');
-            //socket.emit('swipeMobile', 'up');
+            socket.emit('swipeMobile', 'up');
 
         })
         .on('swipedown', function () {
             console.log('swipedown');
-            //socket.emit('swipeMobile', 'down');
+            socket.emit('swipeMobile', 'down');
         });
 
 
