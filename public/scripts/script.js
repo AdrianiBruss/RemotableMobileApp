@@ -151,21 +151,15 @@ $(function () {
     // slider
     $('#slider')
         .on('swiperight', function () {
-            console.log('swiperight');
             socket.emit('swipeMobile', 'next');
-
         })
         .on('swipeleft', function () {
-            console.log('swipeleft');
             socket.emit('swipeMobile', 'prev');
         })
         .on('swipeup', function () {
-            console.log('swipeup');
             socket.emit('swipeMobile', 'up');
-
         })
         .on('swipedown', function () {
-            console.log('swipedown');
             socket.emit('swipeMobile', 'down');
         });
 
