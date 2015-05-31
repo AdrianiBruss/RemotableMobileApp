@@ -6,15 +6,20 @@
      */
     var app = angular.module('services', []);
 
-    app.factory('sitesFactory', ['$q', 'socketService', function ($q, socketService) {
+    app.factory('sitesFactory', ['$rootScope', '$q', 'socketService', function ($rootScope, $q, socketService) {
 
         // --------------------------------------------------
         var hash;
 
         var local = getLocal();
         var websites = [];
-        websites = JSON.parse(local);
+        //websites = JSON.parse(local);
         // --------------------------------------------------
+
+        function getSites() {
+
+            return websites = JSON.parse(getLocal());
+        }
 
         function addSite(res) {
 
@@ -22,7 +27,7 @@
             hash = CryptoJS.SHA512(res.key).toString();
 
             // connexion au serveur
-            connectionToSite(res.url, hash, 'add');
+            return connectionToSite(res.url, hash, 'add');
 
 
         }
@@ -52,9 +57,11 @@
 
         function setLocal(sites, url, hash) {
             localStorage.setItem('remotableSitesMobile', JSON.stringify(saveSite(sites, url, hash)));
+
         }
 
         function connectionToSite(url, hash, action) {
+
 
 
             socketService.init(url);
@@ -73,14 +80,13 @@
                             console.log('saving to new local .. ');
                             var sites = [];
                             setLocal(sites, url, hash);
-                            websites = JSON.parse(getLocal());
-                            console.log(websites);
+                            getSites();
 
                         } else {
 
                             console.log('updating local .. ');
                             setLocal(websites, url, hash);
-                            websites = JSON.parse(getLocal());
+                            getSites();
 
                         }
 
@@ -95,71 +101,28 @@
 
             });
 
-
         }
-
-        function getSocket() {
-
-            var deffered = $q.defer();
-            deffered.resolve(socket);
-            return deffered.promise;
-
-        }
-
-        function getMenu() {
-
-            var socketPromise = getSocket();
-            socketPromise.then(function (socket) {
-
-                socket.on('menuMobile', function (data) {
-                    console.log(data);
-                })
-
-            });
-
-
-        }
-
-
-        // --------------------------------------------------
-        // Application
-        /*$('#wrapper').css('display', 'none');
-
-
-         // menu
-         $('#menu > ul > .menu-item').on('click', function () {
-
-         var link = $(this).attr('data-mobile-menu-item');
-
-         socket.emit('changeLinkMobile', link);
-
-         });*/
 
 
         return {
 
             getSites: function () {
-                var deffered = $q.defer();
-                deffered.resolve(websites);
-                return deffered.promise;
+                return getSites();
             },
             addSite: function (res) {
                 return addSite(res);
-
             },
             connectSite: function (site) {
                 return connectSite(site);
-            },
-            getMenu: function () {
-                return getMenu();
             }
+
 
 
         }
 
     }]);
 
-    app.service('actionsService', ['socketService', function (socketService) {
+    app.service('actionsService', ['$q','socketService', function ($q, socketService) {
 
 
         function swipeDirection(dir) {
@@ -181,7 +144,6 @@
 
             }
 
-
         }
 
         return {
@@ -202,7 +164,9 @@
                 socket = io('ws://' + url + '');
             },
             on: function (eventName, callback) {
+                console.log(eventName);
                 socket.on(eventName, function () {
+
                     var args = arguments;
                     $rootScope.$apply(function () {
                         callback.apply(socket, args);

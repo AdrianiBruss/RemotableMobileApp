@@ -1,15 +1,15 @@
-<ion-view title="RemoteApp">
+<ion-view title="RemoteApp" ng-controller="mainCtrl as m">
     <ion-content>
-        <div ng-controller="addSiteCtrl as addSites">
+        <div >
             <button id="add_new" class="button button-block button-positive"
-                    ng-click="addSites.showAddSites()">
+                    ng-click="m.showAddSites()">
                 Ajouter un site
             </button>
         </div>
-        <div class="row" ng-controller="sitesListCtrl as sitesList">
+        <div class="row">
             <!--{{sitesList.sites}}-->
-            <div class="col" ng-repeat="site in sitesList.sites">
-                <div class="card" ng-click="sitesList.openSite(site)">
+            <div class="col" ng-repeat="site in m.sites">
+                <div class="card" ng-click="m.openSite(site)">
                     <div class="item item-text-wrap">
                         {{site.name}}
                     </div>

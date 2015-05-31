@@ -7,25 +7,17 @@
 
     var app = angular.module('controllers', []);
 
-    app.controller('sitesListCtrl', ['$state', 'sitesFactory', function ($state, sitesFactory) {
+    app.controller('mainCtrl', ['$state', 'sitesFactory', '$scope', '$ionicPopup', function ($state, sitesFactory, $scope, $ionicPopup) {
 
-        var self = this;
-        var promise = sitesFactory.getSites();
-        promise.then(function (data) {
-            self.sites = data;
-        });
-
-        //this.sites = sitesFactory.getSites();
+        this.sites = sitesFactory.getSites();
 
         this.openSite = function (site) {
 
             sitesFactory.connectSite(site);
             $state.go('site');
-        }
+        };
 
-    }]);
-
-    app.controller('addSiteCtrl', ['$scope', 'sitesFactory', '$ionicPopup', function ($scope, sitesFactory, $ionicPopup) {
+        // -------------------------------------------------
 
         // Triggered on a button click, or some other target
         this.showAddSites = function () {
@@ -51,36 +43,44 @@
             addSitePopup.then(function (res) {
                 console.log('Tapped!', res);
                 //Envoyer les infos au service qui ajoute un site
+
                 sitesFactory.addSite(res);
+
             });
 
         };
 
-
     }]);
 
-    app.controller('siteCtrl', ['$state', 'actionsService', function ($state, actionsService) {
+    app.controller('siteCtrl', ['$state', 'actionsService', 'socketService', function ($state, actionsService, socketService) {
 
-        this.backToHome = function(){
+        this.backToHome = function () {
             $state.go('home');
         };
 
-        this.menu = "";
+        // -------------------------------------------------
+        var self = this;
+        this.menu = {};
 
-        //var self = this;
-        //var promise = sitesFactory.getMenu();
-        //promise.then(function (data) {
-        //    self.menu = data;
-        //});
+        socketService.on('menuMobile', function (data) {
+            self.menu = data.menu;
+        });
 
-        this.swipeUp = function(){
-            console.log('swipe up');
+        // -------------------------------------------------
+        this.swipeUp = function () {
             actionsService.swipeDirection('up');
         };
-        this.swipeDown = function(){
-            console.log('swipe down');
+        this.swipeDown = function () {
             actionsService.swipeDirection('down');
         };
+
+        // -------------------------------------------------
+        this.openPage = function(url){
+
+            console.log(url);
+            socketService.emit('changeLinkMobile', url);
+
+        }
 
     }]);
 
