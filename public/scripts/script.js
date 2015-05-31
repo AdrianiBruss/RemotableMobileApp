@@ -66,11 +66,14 @@ $(function () {
 
                 }
 
+
             }
 
         });
 
     }
+
+
 
 
     // --------------------------------------------------
@@ -86,8 +89,6 @@ $(function () {
     if (local != null) {
 
         console.log('getting from local .. ');
-
-        console.log(websites);
 
         for (var i = 0; i < websites.length; i++) {
 
@@ -137,6 +138,8 @@ $(function () {
     // --------------------------------------------------
     // Application
     $('#wrapper').css('display', 'none');
+
+
 
     // menu
     $('#menu > ul > .menu-item').on('click', function () {
