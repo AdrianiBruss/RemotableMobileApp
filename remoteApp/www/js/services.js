@@ -6,13 +6,14 @@
      */
     var app = angular.module('services', []);
 
-    app.factory('sitesFactory', ['$q', function ($q) {
+    app.factory('sitesFactory', ['$q', 'socketService', function ($q, socketService) {
 
         // --------------------------------------------------
         var hash;
-        var socket;
+
         var local = getLocal();
-        var websites = JSON.parse(local);
+        var websites = [];
+        websites = JSON.parse(local);
         // --------------------------------------------------
 
         function addSite(res) {
@@ -55,14 +56,12 @@
 
         function connectionToSite(url, hash, action) {
 
-            socket = io('ws://' + url + '');
-            //var socket = io('ws://192.168.20.253:3303');
-            // envoie la clé au serveur
 
-            socket.emit('mobileCo', hash, function (data) {
+            socketService.init(url);
+
+            socketService.emit('mobileCo', hash, function (data) {
 
                 console.log(data);
-
                 if (data == 'mobileConnection') {
 
                     if (action == 'add') {
@@ -74,12 +73,17 @@
                             console.log('saving to new local .. ');
                             var sites = [];
                             setLocal(sites, url, hash);
+                            websites = JSON.parse(getLocal());
+                            console.log(websites);
 
                         } else {
+
                             console.log('updating local .. ');
                             setLocal(websites, url, hash);
+                            websites = JSON.parse(getLocal());
 
                         }
+
 
                     } else {
 
@@ -91,21 +95,23 @@
 
             });
 
+
         }
 
-        function getSocket(){
+        function getSocket() {
 
             var deffered = $q.defer();
             deffered.resolve(socket);
             return deffered.promise;
 
         }
-        function getMenu(){
+
+        function getMenu() {
 
             var socketPromise = getSocket();
-            socketPromise.then(function(socket){
+            socketPromise.then(function (socket) {
 
-                socket.on('menuMobile', function(data){
+                socket.on('menuMobile', function (data) {
                     console.log(data);
                 })
 
@@ -130,22 +136,6 @@
          });*/
 
 
-        // slider
-        //$('#slider')
-        //    .on('swiperight', function () {
-        //        socket.emit('swipeMobile', 'next');
-        //    })
-        //    .on('swipeleft', function () {
-        //        socket.emit('swipeMobile', 'prev');
-        //    })
-        //    .on('swipeup', function () {
-        //        socket.emit('swipeMobile', 'up');
-        //    })
-        //    .on('swipedown', function () {
-        //        socket.emit('swipeMobile', 'down');
-        //    });
-
-
         return {
 
             getSites: function () {
@@ -160,11 +150,79 @@
             connectSite: function (site) {
                 return connectSite(site);
             },
-            getMenu: function(){
-               return getMenu();
+            getMenu: function () {
+                return getMenu();
             }
 
+
         }
+
+    }]);
+
+    app.service('actionsService', ['socketService', function (socketService) {
+
+
+        function swipeDirection(dir) {
+
+            switch (dir) {
+                case 'up':
+                    socketService.emit('swipeMobile', 'up');
+                    break;
+                case 'down':
+                    socketService.emit('swipeMobile', 'down');
+                    break;
+                case 'left':
+                    socketService.emit('swipeMobile', 'prev');
+                    break;
+                case 'right':
+                    socketService.emit('swipeMobile', 'next');
+                    break;
+
+
+            }
+
+
+        }
+
+        return {
+            swipeDirection: function (dir) {
+                return swipeDirection(dir);
+            }
+        }
+
+    }]);
+
+
+    app.service('socketService', ['$rootScope', function ($rootScope) {
+        //var socket = io.connect();
+        var socket;
+
+        return {
+            init: function (url) {
+                socket = io('ws://' + url + '');
+            },
+            on: function (eventName, callback) {
+                socket.on(eventName, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        callback.apply(socket, args);
+                    });
+                });
+            },
+            emit: function (eventName, data, callback) {
+                socket.emit(eventName, data, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        if (callback) {
+                            callback.apply(socket, args);
+                        }
+                    });
+
+                })
+
+            }
+
+        };
 
     }]);
 

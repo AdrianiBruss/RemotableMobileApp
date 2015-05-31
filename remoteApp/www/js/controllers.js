@@ -15,6 +15,8 @@
             self.sites = data;
         });
 
+        //this.sites = sitesFactory.getSites();
+
         this.openSite = function (site) {
 
             sitesFactory.connectSite(site);
@@ -57,7 +59,7 @@
 
     }]);
 
-    app.controller('siteCtrl', ['$state', 'sitesFactory', function ($state, sitesFactory) {
+    app.controller('siteCtrl', ['$state', 'actionsService', function ($state, actionsService) {
 
         this.backToHome = function(){
             $state.go('home');
@@ -70,6 +72,15 @@
         //promise.then(function (data) {
         //    self.menu = data;
         //});
+
+        this.swipeUp = function(){
+            console.log('swipe up');
+            actionsService.swipeDirection('up');
+        };
+        this.swipeDown = function(){
+            console.log('swipe down');
+            actionsService.swipeDirection('down');
+        };
 
     }]);
 
