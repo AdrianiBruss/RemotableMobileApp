@@ -12,14 +12,10 @@
         var hash;
 
         var local = getLocal();
-        var websites = [];
-        //websites = JSON.parse(local);
+        var websites = JSON.parse(local);
+
         // --------------------------------------------------
 
-        function getSites() {
-
-            return websites = JSON.parse(getLocal());
-        }
 
         function addSite(res) {
 
@@ -28,7 +24,6 @@
 
             // connexion au serveur
             return connectionToSite(res.url, hash, 'add');
-
 
         }
 
@@ -62,13 +57,10 @@
 
         function connectionToSite(url, hash, action) {
 
-
-
             socketService.init(url);
 
-            socketService.emit('mobileCo', hash, function (data) {
+            return socketService.emit('mobileCo', hash, function (data) {
 
-                console.log(data);
                 if (data == 'mobileConnection') {
 
                     if (action == 'add') {
@@ -80,13 +72,13 @@
                             console.log('saving to new local .. ');
                             var sites = [];
                             setLocal(sites, url, hash);
-                            getSites();
+                            websites = JSON.parse(getLocal());
 
                         } else {
 
                             console.log('updating local .. ');
                             setLocal(websites, url, hash);
-                            getSites();
+                            websites = JSON.parse(getLocal());
 
                         }
 
@@ -107,22 +99,24 @@
         return {
 
             getSites: function () {
-                return getSites();
+                return websites;
             },
             addSite: function (res) {
-                return addSite(res);
+
+                var deffered = $q.defer();
+                deffered.resolve(addSite(res));
+                return deffered.promise;
             },
             connectSite: function (site) {
                 return connectSite(site);
             }
 
 
-
         }
 
     }]);
 
-    app.service('actionsService', ['$q','socketService', function ($q, socketService) {
+    app.service('actionsService', ['$q', 'socketService', function ($q, socketService) {
 
 
         function swipeDirection(dir) {
@@ -159,14 +153,13 @@
         //var socket = io.connect();
         var socket;
 
+
         return {
             init: function (url) {
                 socket = io('ws://' + url + '');
             },
             on: function (eventName, callback) {
-                console.log(eventName);
                 socket.on(eventName, function () {
-
                     var args = arguments;
                     $rootScope.$apply(function () {
                         callback.apply(socket, args);
@@ -174,7 +167,8 @@
                 });
             },
             emit: function (eventName, data, callback) {
-                socket.emit(eventName, data, function () {
+
+                socket.emit(eventName, data, function (res) {
                     var args = arguments;
                     $rootScope.$apply(function () {
                         if (callback) {
@@ -182,7 +176,9 @@
                         }
                     });
 
-                })
+                });
+
+                return 'ok';
 
             }
 

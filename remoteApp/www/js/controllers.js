@@ -9,6 +9,9 @@
 
     app.controller('mainCtrl', ['$state', 'sitesFactory', '$scope', '$ionicPopup', function ($state, sitesFactory, $scope, $ionicPopup) {
 
+
+        var self = this;
+
         this.sites = sitesFactory.getSites();
 
         this.openSite = function (site) {
@@ -17,36 +20,59 @@
             $state.go('site');
         };
 
+        this.deleteSite = function (site) {
+            console.log('delete site');
+        };
+
+        this.addSitesButton = function () {
+
+            $state.go('addSite');
+
+        };
+
+        this.backToHome = function () {
+            $state.go('home');
+        };
+
         // -------------------------------------------------
 
-        // Triggered on a button click, or some other target
-        this.showAddSites = function () {
-            $scope.site = {};
 
-            // An elaborate, custom popup
-            var addSitePopup = $ionicPopup.show({
-                templateUrl: 'templates/addSite.html',
-                title: 'Ajouter un site web',
-                //subTitle: 'Please use normal things',
-                scope: $scope,
-                buttons: [
-                    {text: 'Cancel'},
-                    {
-                        text: 'Add',
-                        type: 'button-positive',
-                        onTap: function (e) {
-                            return $scope.site;
-                        }
+        this.errorMessage = false;
+        this.res = {};
+        this.addSite = function (form) {
+
+            console.log(form);
+
+            if (form.$valid) {
+
+                self.errorMessage = false;
+                self.res.url = form.url.$modelValue;
+                self.res.key = form.key.$modelValue;
+
+
+                // attendre que le service nous dise si le site est bien connecté ou pas
+                var promiseCo = sitesFactory.addSite(self.res);
+
+                promiseCo.then(function (result) {
+
+                    console.log(result);
+
+                    if (result == 'ok') {
+
+                        $state.go('site');
+
+                    }else{
+
+                        self.errorMessage = true;
+
                     }
-                ]
-            });
-            addSitePopup.then(function (res) {
-                console.log('Tapped!', res);
-                //Envoyer les infos au service qui ajoute un site
+                });
 
-                sitesFactory.addSite(res);
+            } else {
 
-            });
+                self.errorMessage = true;
+
+            }
 
         };
 
@@ -75,7 +101,7 @@
         };
 
         // -------------------------------------------------
-        this.openPage = function(url){
+        this.openPage = function (url) {
 
             console.log(url);
             socketService.emit('changeLinkMobile', url);

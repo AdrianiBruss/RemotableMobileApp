@@ -1,20 +1,18 @@
 <ion-view title="RemoteApp" ng-controller="mainCtrl as m">
+    <ion-nav-buttons side="primary">
+        <button class="button" ng-click="m.addSitesButton()">
+            <i class="ion-android-add"></i> Add a site
+        </button>
+    </ion-nav-buttons>
     <ion-content>
-        <div >
-            <button id="add_new" class="button button-block button-positive"
-                    ng-click="m.showAddSites()">
-                Ajouter un site
-            </button>
-        </div>
-        <div class="row">
-            <!--{{sitesList.sites}}-->
-            <div class="col" ng-repeat="site in m.sites">
-                <div class="card" ng-click="m.openSite(site)">
-                    <div class="item item-text-wrap">
-                        {{site.name}}
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ion-list>
+            <ion-item ng-repeat="site in m.sites" ng-click="m.openSite(site)">
+                {{site.name}}
+                <ion-option-button class="button-assertive"
+                                   ng-click="m.deleteSite(site)">
+                    Delete
+                </ion-option-button>
+            </ion-item>
+        </ion-list>
     </ion-content>
 </ion-view>

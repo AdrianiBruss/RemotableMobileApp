@@ -1,5 +1,28 @@
-<label for="url_input">Entrer l'url du site</label>
-<input id="url_input" type="text" ng-model="site.url" required/>
+<ion-view title="RemoteApp" ng-controller="mainCtrl as m">
+    <ion-nav-buttons side="primary">
+        <button class="button" ng-click="m.backToHome()">
+            <i class="ion-arrow-left-c"></i> Back
+        </button>
+    </ion-nav-buttons>
+    <ion-content scroll="false">
+        <form name="addSiteForm" novalidate class="simple-form">
+            <div class="list list-inset">
+                <label class="item item-input">
+                    <input id="url_input" type="text" name="url" ng-model="site.url" placeholder="Site Url" required/>
+                </label>
+                <label class="item item-input">
+                    <input id="key_input" type="text" name="key" ng-model="site.key" placeholder="Site Key" required/>
+                </label>
+                <button class="button button-block" ng-click="m.addSite(addSiteForm)"
+                        ng-class="{'button-assertive': false === addSiteForm.$valid, 'button-positive': true === addSiteForm.$valid}">
+                    Add Site
+                </button>
+            </div>
+        </form>
 
-<label for="key_input">Entrer la clé</label>
-<input id="key_input" type="text" ng-model="site.key" required/>
+        <div class="bar bar-footer bar-assertive" ng-show="m.errorMessage">
+            <div class="title">Error</div>
+        </div>
+        <!--{{addSiteForm}}-->
+    </ion-content>
+</ion-view>

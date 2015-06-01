@@ -29,6 +29,10 @@
                 url: '/site',
                 templateUrl: 'templates/site.html'
             })
+            .state('addSite', {
+                url: '/addSite',
+                templateUrl: 'templates/addSite.html'
+            })
     });
 
 })();

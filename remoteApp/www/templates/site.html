@@ -4,7 +4,7 @@
             <i class="ion-arrow-left-c"></i> Back
         </button>
     </ion-nav-buttons>
-    <ion-content>
+    <ion-content scroll="false">
         <div id="slider" on-swipe-up="site.swipeUp()" on-swipe-down="site.swipeDown()"></div>
         <div class="tabs">
             <a class="tab-item" ng-repeat="m in site.menu" ng-click="site.openPage(m.url)">
