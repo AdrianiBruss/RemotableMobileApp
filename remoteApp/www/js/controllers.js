@@ -10,7 +10,7 @@
     /**
      * MainController for Home Page and AddSite Page
      */
-    app.controller('mainCtrl', ['$state', 'sitesFactory', 'socketService', function ($state, sitesFactory, socketService) {
+    app.controller('homeCtrl', ['$state', 'sitesFactory', 'socketService', function ($state, sitesFactory, socketService) {
 
         // ------------------------------------------------------
         // Home Page
@@ -22,9 +22,11 @@
         // Récupération des sites dans le localStorage
         this.sites = sitesFactory.getSites();
 
+
         // Ouverture d'un site
         this.openSite = function (site) {
             sitesFactory.connectSite(site);
+            sitesFactory.setCurrentSite(site);
             $state.go('site');
         };
 
@@ -39,8 +41,90 @@
         };
 
 
+        // Ecoute la reponse de la connexion du mobile ( nouveau site ou reconnexion )
+        socketService.on('mobileConnectedForMobile', function (data) {
+
+            if (data == 'MobileReConnected') {
+
+                console.log('Reconnexion');
+
+                //sitesFactory.setCurrentSite(data);
+
+            } else {
+
+                console.log('Nouveau site Ajouté');
+
+                //ajouter le site dans le localStorage
+                sitesFactory.addToLocal(data);
+
+                //ajouter au service le site courant
+
+                sitesFactory.setCurrentSite(data);
+
+                setTimeout(function () {
+
+                    $state.go('site');
+
+                }, 1000);
+
+
+            }
+
+        });
+
+
+    }]);
+
+
+    /**
+     * Controller for main site page
+     */
+    app.controller('siteCtrl', ['$state', 'actionsService', 'socketService', 'sitesFactory', function ($state, actionsService, socketService, sitesFactory) {
+
+        this.backToHome = function () {
+            $state.go('home');
+        };
+
+        console.log('welcome to the site ');
+
+        // -------------------------------------------------
+        var self = this;
+        this.menu = sitesFactory.getCurrentSite();
+        console.log(this.menu);
+
+        //console.log(sitesFactory.getCurrentSite());
+
+
+        // -------------------------------------------------
+        this.swipeUp = function () {
+            console.log('swipe');
+            actionsService.swipeDirection('up');
+        };
+        this.swipeDown = function () {
+            console.log('swipe');
+            actionsService.swipeDirection('down');
+        };
+
+        // -------------------------------------------------
+        this.openPage = function (url) {
+
+            console.log(url);
+            socketService.emit('changeLinkMobile', url);
+
+        }
+
+    }]);
+
+
+    /**
+     * Controller for addSite Page
+     */
+    app.controller('addSiteCtrl', ['$state', 'sitesFactory', 'socketService', function ($state, sitesFactory, socketService) {
+
         // ------------------------------------------------------
         // AddSite Page
+
+        var self = this;
 
         // Revenir sur la home
         this.backToHome = function () {
@@ -70,65 +154,6 @@
             }
 
         };
-
-
-        // Ecoute la reponse de la connexion du mobile ( nouveau site ou reconnexion )
-        socketService.on('mobileConnectedForMobile', function(data){
-
-            if (data == 'MobileReConnected'){
-
-                console.log('Reconnexion');
-
-            }else {
-
-                console.log('Nouveau site Ajouté : '+ data);
-
-                //ajouter le site dans le localStorage
-                sitesFactory.addToLocal(data);
-
-                setTimeout(function(){
-
-                    console.log('on peut changer de page');
-
-                }, 2000);
-
-                //$state.go('site');
-
-            }
-
-        });
-
-
-    }]);
-
-
-    /**
-     * Controller for main site page
-     */
-    app.controller('siteCtrl', ['$state', 'actionsService', 'socketService', function ($state, actionsService, socketService) {
-
-        this.backToHome = function () {
-            $state.go('home');
-        };
-
-        // -------------------------------------------------
-        var self = this;
-
-        // -------------------------------------------------
-        this.swipeUp = function () {
-            actionsService.swipeDirection('up');
-        };
-        this.swipeDown = function () {
-            actionsService.swipeDirection('down');
-        };
-
-        // -------------------------------------------------
-        this.openPage = function (url) {
-
-            console.log(url);
-            socketService.emit('changeLinkMobile', url);
-
-        }
 
     }]);
 

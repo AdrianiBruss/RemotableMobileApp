@@ -1,6 +1,6 @@
-<ion-view title="RemoteApp" ng-controller="mainCtrl as m">
+<ion-view title="RemoteApp" ng-controller="addSiteCtrl as a">
     <ion-nav-buttons side="primary">
-        <button class="button" ng-click="m.backToHome()">
+        <button class="button" ng-click="a.backToHome()">
             <i class="ion-arrow-left-c"></i> Back
         </button>
     </ion-nav-buttons>
@@ -13,14 +13,14 @@
                 <label class="item item-input">
                     <input id="key_input" type="text" name="key" ng-model="site.key" placeholder="Site Key" required/>
                 </label>
-                <button class="button button-block" ng-click="m.addSite(addSiteForm)"
+                <button class="button button-block" ng-click="a.addSite(addSiteForm)"
                         ng-class="{'button-assertive': false === addSiteForm.$valid, 'button-positive': true === addSiteForm.$valid}">
                     Add Site
                 </button>
             </div>
         </form>
 
-        <div class="bar bar-footer bar-assertive" ng-show="m.errorMessage">
+        <div class="bar bar-footer bar-assertive" ng-show="a.errorMessage">
             <div class="title">Error</div>
         </div>
         <!--{{addSiteForm}}-->

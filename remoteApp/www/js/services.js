@@ -14,6 +14,8 @@
         var local = getLocal();
         var websites = JSON.parse(local);
 
+        var current_site;
+
         // --------------------------------------------------
 
 
@@ -51,7 +53,6 @@
             site.title = title;
             site.hash = hash.toString();
 
-            console.log(site);
             sites.push(site);
 
             return sites;
@@ -64,11 +65,12 @@
 
         function setLocal(sites, hash, menu, url, title) {
             localStorage.setItem('remotableSitesMobile', JSON.stringify(saveSite(sites, hash, menu, url, title)));
-            websites = JSON.parse(getLocal());
 
         }
 
         function connectionToSite(hash) {
+
+            //console.log(data.hash);
 
             socketService.emit('mobileConnection', hash, function (data) {
 
@@ -78,7 +80,7 @@
 
         }
 
-        function addToLocal(data){
+        function addToLocal(data) {
 
             console.log('mobile connected. Wait for saving ...');
 
@@ -88,12 +90,20 @@
                 var sites = [];
                 setLocal(sites, data.hash, data.menu, data.url, data.title);
 
+
             } else {
 
                 console.log('updating localStorage .. ');
                 setLocal(websites, data.hash, data.menu, data.url, data.title);
 
+
             }
+
+        }
+
+        function setCurrentSite(data){
+
+            current_site = data;
 
         }
 
@@ -109,8 +119,14 @@
             connectSite: function (site) {
                 return connectSite(site);
             },
-            addToLocal: function(data){
+            addToLocal: function (data) {
                 return addToLocal(data);
+            },
+            getCurrentSite: function () {
+                return current_site;
+            },
+            setCurrentSite: function (data) {
+                return setCurrentSite(data);
             }
 
 
