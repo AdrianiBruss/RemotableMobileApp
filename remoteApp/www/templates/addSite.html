@@ -5,16 +5,30 @@
         </button>
     </ion-nav-buttons>
     <ion-content scroll="false">
+
+        <div class="row">
+            <div class="col color-square" ng-repeat="k in [1,2,3,4]"
+                 ng-style="a.getColor($index)"></div>
+        </div>
+        <div class="row">
+            <div class="col color-square-input" ng-style="{'backgroundColor':'#{{s}}'}"
+                 ng-repeat="s in a.colors_1 track by $index" ng-click="a.addColor(s)"></div>
+        </div>
+        <div class="row">
+            <div class="col color-square-input" ng-style="{'backgroundColor':'#{{s}}'}"
+                 ng-repeat="s in a.colors_2 track by $index" ng-click="a.addColor(s)"></div>
+        </div>
+
         <form name="addSiteForm" novalidate class="simple-form">
             <div class="list list-inset">
                 <!--<label class="item item-input">-->
-                    <!--<input id="url_input" type="text" name="url" ng-model="site.url" placeholder="Site Url" required/>-->
+                <!--<input id="url_input" type="text" name="url" ng-model="site.url" placeholder="Site Url" required/>-->
                 <!--</label>-->
                 <label class="item item-input">
-                    <input id="key_input" type="text" name="key" ng-model="site.key" placeholder="Site Key" required/>
+                    <input id="key_input" type="text" name="key" ng-model="a.key" placeholder="Site Key" required/>
                 </label>
                 <button class="button button-block" ng-click="a.addSite(addSiteForm)"
-                        ng-class="{'button-assertive': false === addSiteForm.$valid, 'button-positive': true === addSiteForm.$valid}">
+                        ng-class="{'button-assertive': a.key.length < 28, 'button-positive': a.key.length == 28 }">
                     Add Site
                 </button>
             </div>

@@ -57,6 +57,9 @@
                 //ajouter le site dans le localStorage
                 sitesFactory.addToLocal(data);
 
+                self.sites = sitesFactory.getSites();
+                console.log(self.sites);
+
                 //ajouter au service le site courant
 
                 sitesFactory.setCurrentSite(data);
@@ -65,7 +68,7 @@
 
                     $state.go('site');
 
-                }, 1000);
+                }, 500);
 
 
             }
@@ -90,7 +93,9 @@
         // -------------------------------------------------
         var self = this;
         this.menu = sitesFactory.getCurrentSite();
-        console.log(this.menu);
+        if (this.menu == null) {
+            $state.go('home');
+        }
 
         //console.log(sitesFactory.getCurrentSite());
 
@@ -107,10 +112,7 @@
 
         // -------------------------------------------------
         this.openPage = function (url) {
-
-            console.log(url);
             socketService.emit('changeLinkMobile', url);
-
         }
 
     }]);
@@ -125,6 +127,28 @@
         // AddSite Page
 
         var self = this;
+
+        this.colors_1 = ['2C3E50', 'F2784B', 'F9BF3B', '00B16A'];
+        this.colors_2 = ['4B77BE', '6C7A89', 'F64747', '87D37C'];
+
+        this.keyColor = [];
+        this.key = '';
+
+        this.addColor = function (color) {
+
+            if (self.keyColor.length < 4){
+                self.keyColor.push(color);
+                self.key += color+'-';
+
+            }
+
+        };
+
+        this.getColor = function (index) {
+            return {
+                'backgroundColor': '#' + self.keyColor[index] + ''
+            }
+        };
 
         // Revenir sur la home
         this.backToHome = function () {
@@ -141,11 +165,9 @@
             if (form.$valid) {
 
                 self.errorMessage = false;
-                //self.res.url = form.url.$modelValue;
-                self.res.key = form.key.$modelValue;
 
                 // AddSite
-                sitesFactory.addSite(self.res);
+                sitesFactory.addSite(form.key.$modelValue);
 
             } else {
 

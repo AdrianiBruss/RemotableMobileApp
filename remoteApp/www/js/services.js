@@ -18,14 +18,21 @@
 
         // --------------------------------------------------
 
+        function updateSites() {
+
+            return websites = JSON.parse(local);
+
+        }
 
         function addSite(res) {
 
             var data = {};
             data.add = true;
 
+            var key = res.substring(0, res.length-1);
+
             // encrypte la clé en sha512
-            hash = CryptoJS.SHA512(res.key).toString();
+            hash = CryptoJS.SHA512(key).toString();
             data.hash = hash;
 
 
@@ -89,19 +96,19 @@
                 console.log('saving to localStorage .. ');
                 var sites = [];
                 setLocal(sites, data.hash, data.menu, data.url, data.title);
-
+                updateSites();
 
             } else {
 
                 console.log('updating localStorage .. ');
                 setLocal(websites, data.hash, data.menu, data.url, data.title);
-
+                updateSites();
 
             }
 
         }
 
-        function setCurrentSite(data){
+        function setCurrentSite(data) {
 
             current_site = data;
 
