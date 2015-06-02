@@ -6,6 +6,8 @@
     <title>RemoteApp</title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/component.css" rel="stylesheet">
+    <link href="css/icons.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
@@ -17,11 +19,12 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-
+    <script src="vendors/angular-load.js"></script>
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
+    <script src="js/directives.js"></script>
 
 </head>
 <body ng-app="remoteApp">
@@ -33,6 +36,8 @@
 <script src="vendors/jquery.js"></script>
 <!--<script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>-->
 <script src="vendors/jquery.swipe.js"></script>
+<script src="vendors/classie.js"></script>
+<!--<script src="vendors/sidebarEffects.js"></script>-->
 <!--<script src="scripts/script.js"></script>-->
 </body>
 </html>
