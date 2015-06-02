@@ -7,7 +7,8 @@
     <ion-content>
         <ion-list>
             <ion-item ng-repeat="site in m.sites" ng-click="m.openSite(site)">
-                {{site.name}}
+                <img src="../img/ionic.png" alt="" height="30" width="30"/>
+                {{site.title}}
                 <ion-option-button class="button-assertive"
                                    ng-click="m.deleteSite(site)">
                     Delete

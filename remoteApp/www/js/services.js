@@ -19,27 +19,39 @@
 
         function addSite(res) {
 
+            var data = {};
+            data.add = true;
+
             // encrypte la clé en sha512
             hash = CryptoJS.SHA512(res.key).toString();
+            data.hash = hash;
+
 
             // connexion au serveur
-            return connectionToSite(res.url, hash, 'add');
+            connectionToSite(data);
 
         }
 
         function connectSite(site) {
 
+            var data = {};
+            data.add = false;
+            data.hash = site.hash;
+
             // reconnexion au serveur
-            connectionToSite(site.name, site.hash, 'reco');
+            connectionToSite(data);
 
         }
 
-        function saveSite(sites, url, hash) {
+        function saveSite(sites, hash, menu, url, title) {
 
             var site = {};
-            site.name = url;
-            site.url = document.URL;
+            site.url = url;
+            site.menu = menu;
+            site.title = title;
             site.hash = hash.toString();
+
+            console.log(site);
             sites.push(site);
 
             return sites;
@@ -50,48 +62,38 @@
             return localStorage.getItem('remotableSitesMobile');
         }
 
-        function setLocal(sites, url, hash) {
-            localStorage.setItem('remotableSitesMobile', JSON.stringify(saveSite(sites, url, hash)));
+        function setLocal(sites, hash, menu, url, title) {
+            localStorage.setItem('remotableSitesMobile', JSON.stringify(saveSite(sites, hash, menu, url, title)));
+            websites = JSON.parse(getLocal());
 
         }
 
-        function connectionToSite(url, hash, action) {
+        function connectionToSite(hash) {
 
-            socketService.init(url);
+            socketService.emit('mobileConnection', hash, function (data) {
 
-            return socketService.emit('mobileCo', hash, function (data) {
-
-                if (data == 'mobileConnection') {
-
-                    if (action == 'add') {
-
-                        console.log('website added and connected');
-
-                        //stocke dans le localStorage le site
-                        if (local == null) {
-                            console.log('saving to new local .. ');
-                            var sites = [];
-                            setLocal(sites, url, hash);
-                            websites = JSON.parse(getLocal());
-
-                        } else {
-
-                            console.log('updating local .. ');
-                            setLocal(websites, url, hash);
-                            websites = JSON.parse(getLocal());
-
-                        }
-
-
-                    } else {
-
-                        console.log('reconnection');
-
-                    }
-
-                }
+                console.log(data);
 
             });
+
+        }
+
+        function addToLocal(data){
+
+            console.log('mobile connected. Wait for saving ...');
+
+            //stocke dans le localStorage le site
+            if (local == null) {
+                console.log('saving to localStorage .. ');
+                var sites = [];
+                setLocal(sites, data.hash, data.menu, data.url, data.title);
+
+            } else {
+
+                console.log('updating localStorage .. ');
+                setLocal(websites, data.hash, data.menu, data.url, data.title);
+
+            }
 
         }
 
@@ -102,13 +104,13 @@
                 return websites;
             },
             addSite: function (res) {
-
-                var deffered = $q.defer();
-                deffered.resolve(addSite(res));
-                return deffered.promise;
+                return addSite(res);
             },
             connectSite: function (site) {
                 return connectSite(site);
+            },
+            addToLocal: function(data){
+                return addToLocal(data);
             }
 
 
@@ -155,8 +157,10 @@
 
 
         return {
-            init: function (url) {
-                socket = io('ws://' + url + '');
+            init: function () {
+                //socket = io('ws://' + url + '');
+                //socket = io('ws://192.168.20.253:3303');
+                socket = io('ws://192.168.10.16:3303');
             },
             on: function (eventName, callback) {
                 socket.on(eventName, function () {
@@ -177,8 +181,6 @@
                     });
 
                 });
-
-                return 'ok';
 
             }
 

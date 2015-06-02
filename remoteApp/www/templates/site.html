@@ -5,11 +5,25 @@
         </button>
     </ion-nav-buttons>
     <ion-content scroll="false">
+        <!--<ion-side-menu>-->
+            <!--&lt;!&ndash; Right menu &ndash;&gt;-->
+            <!--<ion-side-menu side="right">-->
+            <!--</ion-side-menu>-->
+            <!--<ion-side-menu-content>-->
+                <!--&lt;!&ndash; Main content, usually <ion-nav-view> &ndash;&gt;-->
+                <!--<a class="tab-item" ng-repeat="m in site.menu" ng-click="site.openPage(m.url)">-->
+                    <!--{{m.name}}-->
+                <!--</a>-->
+            <!--</ion-side-menu-content>-->
+        <!--</ion-side-menu>-->
+
+        <!--{{site.menu}}-->
         <div id="slider" on-swipe-up="site.swipeUp()" on-swipe-down="site.swipeDown()"></div>
         <div class="tabs">
             <a class="tab-item" ng-repeat="m in site.menu" ng-click="site.openPage(m.url)">
-                {{m.name}}
+            {{m.name}}
             </a>
+
         </div>
     </ion-content>
 </ion-view>

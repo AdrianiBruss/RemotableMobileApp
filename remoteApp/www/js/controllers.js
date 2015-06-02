@@ -7,66 +7,61 @@
 
     var app = angular.module('controllers', []);
 
-    app.controller('mainCtrl', ['$state', 'sitesFactory', '$scope', '$ionicPopup', function ($state, sitesFactory, $scope, $ionicPopup) {
+    /**
+     * MainController for Home Page and AddSite Page
+     */
+    app.controller('mainCtrl', ['$state', 'sitesFactory', 'socketService', function ($state, sitesFactory, socketService) {
 
-
+        // ------------------------------------------------------
+        // Home Page
         var self = this;
 
+        // Socket initialisation
+        socketService.init();
+
+        // Récupération des sites dans le localStorage
         this.sites = sitesFactory.getSites();
 
+        // Ouverture d'un site
         this.openSite = function (site) {
-
             sitesFactory.connectSite(site);
             $state.go('site');
         };
 
+        // Suppression d'un site
         this.deleteSite = function (site) {
             console.log('delete site');
         };
 
+        // Ajout d'un site
         this.addSitesButton = function () {
-
             $state.go('addSite');
-
         };
 
+
+        // ------------------------------------------------------
+        // AddSite Page
+
+        // Revenir sur la home
         this.backToHome = function () {
             $state.go('home');
         };
 
-        // -------------------------------------------------
-
-
+        // AddSite Form
         this.errorMessage = false;
         this.res = {};
-        this.addSite = function (form) {
 
-            console.log(form);
+        // AddSite function
+        this.addSite = function (form) {
 
             if (form.$valid) {
 
                 self.errorMessage = false;
-                self.res.url = form.url.$modelValue;
+                //self.res.url = form.url.$modelValue;
                 self.res.key = form.key.$modelValue;
 
-
-                // attendre que le service nous dise si le site est bien connecté ou pas
-                var promiseCo = sitesFactory.addSite(self.res);
-
-                promiseCo.then(function (result) {
-
-                    console.log(result);
-
-                    if (result == 'ok') {
-
-                        $state.go('site');
-
-                    }else{
-
-                        self.errorMessage = true;
-
-                    }
-                });
+                // AddSite
+                sitesFactory.addSite(self.res);
 
             } else {
 
@@ -76,8 +71,40 @@
 
         };
 
+
+        // Ecoute la reponse de la connexion du mobile ( nouveau site ou reconnexion )
+        socketService.on('mobileConnectedForMobile', function(data){
+
+            if (data == 'MobileReConnected'){
+
+                console.log('Reconnexion');
+
+            }else {
+
+                console.log('Nouveau site Ajouté : '+ data);
+
+                //ajouter le site dans le localStorage
+                sitesFactory.addToLocal(data);
+
+                setTimeout(function(){
+
+                    console.log('on peut changer de page');
+
+                }, 2000);
+
+                //$state.go('site');
+
+            }
+
+        });
+
+
     }]);
 
+
+    /**
+     * Controller for main site page
+     */
     app.controller('siteCtrl', ['$state', 'actionsService', 'socketService', function ($state, actionsService, socketService) {
 
         this.backToHome = function () {
@@ -86,11 +113,6 @@
 
         // -------------------------------------------------
         var self = this;
-        this.menu = {};
-
-        socketService.on('menuMobile', function (data) {
-            self.menu = data.menu;
-        });
 
         // -------------------------------------------------
         this.swipeUp = function () {
