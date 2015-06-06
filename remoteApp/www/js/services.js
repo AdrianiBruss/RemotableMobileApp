@@ -17,6 +17,7 @@
         var current_site;
 
         var promiseAddSite = $q.defer();
+        var promiseRemoveSite = $q.defer();
         // --------------------------------------------------
 
         function addSite(res) {
@@ -96,6 +97,31 @@
 
         }
 
+        function deleteFromLocal(data){
+
+            var local = JSON.parse(localStorage.remotableSitesMobile);
+
+            if (local.length == 1) {
+
+                localStorage.removeItem('remotableSitesMobile');
+
+            }else{
+
+                for (var i = 0; i < local.length; i++){
+
+                    if (data.hash == local[i].hash){
+
+                        local = local.slice(i+1);
+                    }
+
+                }
+                localStorage.setItem('remotableSitesMobile', JSON.stringify(local));
+
+            }
+
+            promiseRemoveSite.resolve(JSON.parse(getLocal()));
+        }
+
         function setCurrentSite(data) {
 
             current_site = data;
@@ -117,6 +143,10 @@
             addToLocal: function (data) {
                 addToLocal(data);
                 return promiseAddSite.promise;
+            },
+            deleteFromLocal: function(data){
+                deleteFromLocal(data);
+                return promiseRemoveSite.promise;
             },
             getCurrentSite: function () {
                 return current_site;

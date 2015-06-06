@@ -32,7 +32,19 @@
 
         // Suppression d'un site
         this.deleteSite = function (site) {
-            console.log('delete site');
+
+            socketService.emit('deleteMobile', site, function(data){
+
+                console.log(data);
+
+                var deleteSitePromise = sitesFactory.deleteFromLocal(site);
+                deleteSitePromise.then(function(result){
+
+                    self.sites = result;
+
+                })
+
+            })
         };
 
         // Ajout d'un site
@@ -50,14 +62,14 @@
 
             } else {
 
-                //ajouter au service le site courant
-                sitesFactory.setCurrentSite(data);
-
                 var addSitePromise = sitesFactory.addToLocal(data);
                 addSitePromise.then(function (result) {
 
-                    console.log(result);
                     self.sites = result;
+
+                    //ajouter au service le site courant
+                    sitesFactory.setCurrentSite(data);
+
 
                     $state.go('site');
 
@@ -165,6 +177,9 @@
                 self.errorMessage = false;
                 // AddSite
                 sitesFactory.addSite(self.key);
+
+                self.key = '';
+                self.keyColor = [];
 
             } else {
 
