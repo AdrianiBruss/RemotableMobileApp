@@ -134,6 +134,14 @@
             }
         };
 
+        // Supprime les carrés de couleur
+        this.removeColors = function(){
+
+            self.key = '';
+            self.keyColor = [];
+
+        };
+
         this.getColor = function (index) {
             return {
                 'backgroundColor': '#' + self.colors[self.keyColor[index]] + ''
