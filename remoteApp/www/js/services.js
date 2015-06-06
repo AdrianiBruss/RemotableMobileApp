@@ -16,25 +16,15 @@
 
         var current_site;
 
+        var promiseAddSite = $q.defer();
         // --------------------------------------------------
-
-        function updateSites() {
-
-            return websites = JSON.parse(local);
-
-        }
 
         function addSite(res) {
 
             var data = {};
-            data.add = true;
-
-            var key = res.substring(0, res.length-1);
-
             // encrypte la clé en sha512
-            hash = CryptoJS.SHA512(key).toString();
+            hash = CryptoJS.SHA512(res).toString();
             data.hash = hash;
-
 
             // connexion au serveur
             connectionToSite(data);
@@ -44,7 +34,6 @@
         function connectSite(site) {
 
             var data = {};
-            data.add = false;
             data.hash = site.hash;
 
             // reconnexion au serveur
@@ -73,6 +62,9 @@
         function setLocal(sites, hash, menu, url, title) {
             localStorage.setItem('remotableSitesMobile', JSON.stringify(saveSite(sites, hash, menu, url, title)));
 
+            // return addSite promise
+            promiseAddSite.resolve(JSON.parse(getLocal()));
+
         }
 
         function connectionToSite(hash) {
@@ -89,20 +81,16 @@
 
         function addToLocal(data) {
 
-            console.log('mobile connected. Wait for saving ...');
-
             //stocke dans le localStorage le site
             if (local == null) {
                 console.log('saving to localStorage .. ');
                 var sites = [];
                 setLocal(sites, data.hash, data.menu, data.url, data.title);
-                updateSites();
 
             } else {
 
                 console.log('updating localStorage .. ');
                 setLocal(websites, data.hash, data.menu, data.url, data.title);
-                updateSites();
 
             }
 
@@ -127,7 +115,8 @@
                 return connectSite(site);
             },
             addToLocal: function (data) {
-                return addToLocal(data);
+                addToLocal(data);
+                return promiseAddSite.promise;
             },
             getCurrentSite: function () {
                 return current_site;
@@ -175,15 +164,15 @@
 
 
     app.service('socketService', ['$rootScope', function ($rootScope) {
-        //var socket = io.connect();
-        var socket;
 
+        var socket;
 
         return {
             init: function () {
                 //socket = io('ws://' + url + '');
                 //socket = io('ws://192.168.20.253:3303');
-                socket = io('ws://192.168.10.16:3303');
+                //socket = io('ws://192.168.10.16:3303');
+                socket = io('ws://192.168.10.17:3303');
             },
             on: function (eventName, callback) {
                 socket.on(eventName, function () {

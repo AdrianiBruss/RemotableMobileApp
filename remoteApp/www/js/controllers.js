@@ -46,29 +46,22 @@
 
             if (data == 'MobileReConnected') {
 
-                console.log('Reconnexion');
-
                 //sitesFactory.setCurrentSite(data);
 
             } else {
 
-                console.log('Nouveau site Ajouté');
-
-                //ajouter le site dans le localStorage
-                sitesFactory.addToLocal(data);
-
-                self.sites = sitesFactory.getSites();
-                console.log(self.sites);
-
                 //ajouter au service le site courant
-
                 sitesFactory.setCurrentSite(data);
 
-                setTimeout(function () {
+                var addSitePromise = sitesFactory.addToLocal(data);
+                addSitePromise.then(function (result) {
+
+                    console.log(result);
+                    self.sites = result;
 
                     $state.go('site');
 
-                }, 500);
+                });
 
 
             }
@@ -128,25 +121,22 @@
 
         var self = this;
 
-        this.colors_1 = ['2C3E50', 'F2784B', 'F9BF3B', '00B16A'];
-        this.colors_2 = ['4B77BE', '6C7A89', 'F64747', '87D37C'];
+        this.colors = ['6C7A89', 'F2784B', 'F9BF3B', '00B16A', '87D37C', '4B77BE', '2C3E50', 'F64747', 'AEA8D3', '674172'];
 
         this.keyColor = [];
         this.key = '';
 
         this.addColor = function (color) {
 
-            if (self.keyColor.length < 4){
+            if (self.keyColor.length < 4) {
                 self.keyColor.push(color);
-                self.key += color+'-';
-
+                self.key += color;
             }
-
         };
 
         this.getColor = function (index) {
             return {
-                'backgroundColor': '#' + self.keyColor[index] + ''
+                'backgroundColor': '#' + self.colors[self.keyColor[index]] + ''
             }
         };
 
@@ -165,9 +155,8 @@
             if (form.$valid) {
 
                 self.errorMessage = false;
-
                 // AddSite
-                sitesFactory.addSite(form.key.$modelValue);
+                sitesFactory.addSite(self.key);
 
             } else {
 
