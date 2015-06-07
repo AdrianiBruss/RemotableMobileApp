@@ -42,13 +42,15 @@
 
         }
 
-        function saveSite(sites, hash, menu, url, title) {
+        function saveSite(sites, data) {
 
             var site = {};
-            site.url = url;
-            site.menu = menu;
-            site.title = title;
-            site.hash = hash.toString();
+            site.url = data.url;
+            site.menu = data.menu;
+            site.title = data.title;
+            site.hash = data.hash.toString();
+            site.bodyHeight = data.bodyHeight;
+            site.favicon = data.favicon;
 
             sites.push(site);
 
@@ -60,8 +62,8 @@
             return localStorage.getItem('remotableSitesMobile');
         }
 
-        function setLocal(sites, hash, menu, url, title) {
-            localStorage.setItem('remotableSitesMobile', JSON.stringify(saveSite(sites, hash, menu, url, title)));
+        function setLocal(sites, data) {
+            localStorage.setItem('remotableSitesMobile', JSON.stringify(saveSite(sites, data)));
 
             // return addSite promise
             promiseAddSite.resolve(JSON.parse(getLocal()));
@@ -86,18 +88,18 @@
             if (local == null) {
                 console.log('saving to localStorage .. ');
                 var sites = [];
-                setLocal(sites, data.hash, data.menu, data.url, data.title);
+                setLocal(sites, data);
 
             } else {
 
                 console.log('updating localStorage .. ');
-                setLocal(websites, data.hash, data.menu, data.url, data.title);
+                setLocal(websites, data);
 
             }
 
         }
 
-        function deleteFromLocal(data){
+        function deleteFromLocal(data) {
 
             var local = JSON.parse(localStorage.remotableSitesMobile);
 
@@ -105,13 +107,13 @@
 
                 localStorage.removeItem('remotableSitesMobile');
 
-            }else{
+            } else {
 
-                for (var i = 0; i < local.length; i++){
+                for (var i = 0; i < local.length; i++) {
 
-                    if (data.hash == local[i].hash){
+                    if (data.hash == local[i].hash) {
 
-                        local = local.slice(i+1);
+                        local = local.slice(i + 1);
                     }
 
                 }
@@ -144,7 +146,7 @@
                 addToLocal(data);
                 return promiseAddSite.promise;
             },
-            deleteFromLocal: function(data){
+            deleteFromLocal: function (data) {
                 deleteFromLocal(data);
                 return promiseRemoveSite.promise;
             },
@@ -162,7 +164,6 @@
 
     app.service('actionsService', ['$q', 'socketService', function ($q, socketService) {
 
-
         function swipeDirection(dir) {
 
             switch (dir) {
@@ -178,8 +179,6 @@
                 case 'right':
                     socketService.emit('swipeMobile', 'next');
                     break;
-
-
             }
 
         }

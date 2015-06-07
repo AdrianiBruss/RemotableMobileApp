@@ -58,6 +58,7 @@
 
             if (data == 'MobileReConnected') {
 
+                console.log(data);
                 //sitesFactory.setCurrentSite(data);
 
             } else {
@@ -67,11 +68,13 @@
 
                     self.sites = result;
 
+                    console.log(self.sites);
+
                     //ajouter au service le site courant
                     sitesFactory.setCurrentSite(data);
 
 
-                    $state.go('site');
+                    $state.go('site.menu');
 
                 });
 
@@ -90,37 +93,55 @@
     app.controller('siteCtrl', ['$scope', '$state', '$ionicSideMenuDelegate', 'actionsService', 'socketService', 'sitesFactory',
         function ($scope, $state, $ionicSideMenuDelegate, actionsService, socketService, sitesFactory) {
 
-        this.backToHome = function () {
-            $state.go('home');
-        };
+            this.backToHome = function () {
+                $state.go('home');
+            };
 
-        // -------------------------------------------------
-        var self = this;
-        this.menu = sitesFactory.getCurrentSite();
-        if (this.menu == null) {
-            $state.go('home');
-        }
+            // -------------------------------------------------
+            var self = this;
+            this.menu = sitesFactory.getCurrentSite();
+            if (this.menu == null) {
+                $state.go('home');
+            }
+            
 
+            // -------------------------------------------------
+            this.swipeUp = function () {
+                actionsService.swipeDirection('up');
 
-        // -------------------------------------------------
-        this.swipeUp = function () {
-            actionsService.swipeDirection('up');
-        };
-        this.swipeDown = function () {
-            actionsService.swipeDirection('down');
+                if (self.gaugeHeight > 0){
+                    self.gaugeHeight -= self.ratio;
+                }
 
-        };
+            };
+            this.swipeDown = function () {
+                actionsService.swipeDirection('down');
 
-        // -------------------------------------------------
-        this.openPage = function (url) {
-            socketService.emit('changeLinkMobile', url);
-        };
+                if (self.gaugeHeight < 100){
+                    self.gaugeHeight += self.ratio;
+                }
+            };
 
-        this.toggleRight = function () {
-            $ionicSideMenuDelegate.toggleRight();
-        };
+            // -------------------------------------------------
+            this.openPage = function (url) {
+                socketService.emit('changeLinkMobile', url);
+            };
 
-    }]);
+            this.toggleRight = function () {
+                $ionicSideMenuDelegate.toggleRight();
+            };
+
+            this.gaugeHeight = 0;
+            this.windowHeight = 0;
+            this.ratio = 0;
+
+            socketService.on('windowHeight', function(data){
+
+                self.ratio = Math.round(1/(self.menu.bodyHeight / data.height) * 100);
+
+            })
+
+        }]);
 
 
     /**
