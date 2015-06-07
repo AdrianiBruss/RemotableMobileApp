@@ -27,18 +27,18 @@
         this.openSite = function (site) {
             sitesFactory.connectSite(site);
             sitesFactory.setCurrentSite(site);
-            $state.go('site');
+            $state.go('site.menu');
         };
 
         // Suppression d'un site
         this.deleteSite = function (site) {
 
-            socketService.emit('deleteMobile', site, function(data){
+            socketService.emit('deleteMobile', site, function (data) {
 
                 console.log(data);
 
                 var deleteSitePromise = sitesFactory.deleteFromLocal(site);
-                deleteSitePromise.then(function(result){
+                deleteSitePromise.then(function (result) {
 
                     self.sites = result;
 
@@ -87,13 +87,12 @@
     /**
      * Controller for main site page
      */
-    app.controller('siteCtrl', ['$state', 'actionsService', 'socketService', 'sitesFactory', function ($state, actionsService, socketService, sitesFactory) {
+    app.controller('siteCtrl', ['$scope', '$state', '$ionicSideMenuDelegate', 'actionsService', 'socketService', 'sitesFactory',
+        function ($scope, $state, $ionicSideMenuDelegate, actionsService, socketService, sitesFactory) {
 
         this.backToHome = function () {
             $state.go('home');
         };
-
-        console.log('welcome to the site ');
 
         // -------------------------------------------------
         var self = this;
@@ -102,23 +101,24 @@
             $state.go('home');
         }
 
-        //console.log(sitesFactory.getCurrentSite());
-
 
         // -------------------------------------------------
         this.swipeUp = function () {
-            console.log('swipe');
             actionsService.swipeDirection('up');
         };
         this.swipeDown = function () {
-            console.log('swipe');
             actionsService.swipeDirection('down');
+
         };
 
         // -------------------------------------------------
         this.openPage = function (url) {
             socketService.emit('changeLinkMobile', url);
-        }
+        };
+
+        this.toggleRight = function () {
+            $ionicSideMenuDelegate.toggleRight();
+        };
 
     }]);
 
@@ -147,7 +147,7 @@
         };
 
         // Supprime les carrés de couleur
-        this.removeColors = function(){
+        this.removeColors = function () {
 
             self.key = '';
             self.keyColor = [];

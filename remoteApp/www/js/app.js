@@ -27,7 +27,16 @@
             })
             .state('site', {
                 url: '/site',
-                templateUrl: 'templates/site.html'
+                abstract: true,
+                templateUrl: 'templates/siteMenu.html'
+            })
+            .state('site.menu', {
+                url: "/single",
+                views: {
+                    'menuContent' :{
+                        templateUrl: "templates/siteContent.html"
+                    }
+                }
             })
             .state('addSite', {
                 url: '/addSite',

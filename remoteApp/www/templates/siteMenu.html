@@ -1,0 +1,29 @@
+<ion-side-menus ng-controller="siteCtrl as site">
+
+    <ion-pane ion-side-menu-content>
+        <ion-nav-bar class="bar-energized nav-title-slide-ios7">
+            <ion-nav-buttons side="right">
+                <button class="button button-icon button-clear ion-navicon" ng-click="site.toggleRight()">
+                </button>
+            </ion-nav-buttons>
+
+            <ion-nav-back-button class="button-clear"><i class="icon ion-chevron-left"></i> Back</ion-nav-back-button>
+
+        </ion-nav-bar>
+        <ion-nav-view name="menuContent" animation="slide-left-right"></ion-nav-view>
+    </ion-pane>
+
+    <ion-side-menu side="right">
+        <header class="bar bar-header bar-stable">
+            <h1 class="title">Menu</h1>
+        </header>
+        <ion-content class="has-header">
+            <ul class="list">
+                <li ng-repeat="m in site.menu.menu[0]" ng-click="site.openPage(m.url)">
+                    <a href="#" menu-toggle="right" class="item" nav-clear>{{m.name}}</a>
+                </li>
+            </ul>
+        </ion-content>
+    </ion-side-menu>
+
+</ion-side-menus>
