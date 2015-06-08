@@ -3,10 +3,12 @@
     height: 200px;
     margin: 70px auto 0 auto;
     display: block;
-    border: 1px solid #000;
     text-align: center;
     line-height: 170px;
+    background-color: #F2784B;
 }
+
+
 .scroll{
     height: 100%;
 }

@@ -35,8 +35,6 @@
 
             socketService.emit('deleteMobile', site, function (data) {
 
-                console.log(data);
-
                 var deleteSitePromise = sitesFactory.deleteFromLocal(site);
                 deleteSitePromise.then(function (result) {
 
@@ -58,8 +56,8 @@
 
             if (data == 'MobileReConnected') {
 
-                console.log(data);
-                //sitesFactory.setCurrentSite(data);
+                console.log('mobile reconnected');
+                sitesFactory.setCurrentSite(data);
 
             } else {
 
@@ -68,11 +66,8 @@
 
                     self.sites = result;
 
-                    console.log(self.sites);
-
                     //ajouter au service le site courant
                     sitesFactory.setCurrentSite(data);
-
 
                     $state.go('site.menu');
 

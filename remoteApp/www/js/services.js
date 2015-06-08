@@ -49,7 +49,6 @@
             site.menu = data.menu;
             site.title = data.title;
             site.hash = data.hash.toString();
-            site.bodyHeight = data.bodyHeight;
             site.favicon = data.favicon;
 
             sites.push(site);
@@ -83,6 +82,7 @@
         }
 
         function addToLocal(data) {
+
 
             //stocke dans le localStorage le site
             if (local == null) {
@@ -199,9 +199,9 @@
         return {
             init: function () {
                 //socket = io('ws://' + url + '');
-                //socket = io('ws://192.168.20.253:3303');
+                socket = io('ws://192.168.20.253:3303');
                 //socket = io('ws://192.168.10.16:3303');
-                socket = io('ws://192.168.10.17:3303');
+                //socket = io('ws://192.168.10.17:3303');
             },
             on: function (eventName, callback) {
                 socket.on(eventName, function () {
