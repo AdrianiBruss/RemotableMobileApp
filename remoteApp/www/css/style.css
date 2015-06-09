@@ -10,8 +10,9 @@
 
     width: 100%;
     transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
     transition: transform 500ms ease;
-    -webkit-transition: transform 500ms ease;
+    -webkit-transition: -webkit-transform 500ms ease;
     position: absolute;
     top: 0;
     z-index: -1;

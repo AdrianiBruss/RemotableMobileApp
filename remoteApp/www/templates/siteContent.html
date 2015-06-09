@@ -9,8 +9,9 @@
              on-swipe-left="site.swipe('left')" on-swipe-right="site.swipe('right')">
         </div>
         <!--{{site.layout.layout}}-->
-       <!--{{site.nbSections}}-->
-        <div id="links" ng-style="{'height': site.linksHeight + '%', 'transform':'translate3d(0, -'+site.transformLinks+'%, 0)' }">
+        <!--{{site.nbSections}}-->
+        <div id="links"
+             ng-style="{'height': site.linksHeight + '%', 'transform':'translate3d(0, -'+site.transformLinks+'%, 0)', '-webkit-transform':'translate3d(0, -'+site.transformLinks+'%, 0)' }">
             <div class="section" ng-class="'section-'+$index" ng-repeat="link in site.layout.layout">
                 <div class="btn" ng-repeat="l in link">{{l.text}}</div>
             </div>

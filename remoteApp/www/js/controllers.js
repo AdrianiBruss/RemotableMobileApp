@@ -29,11 +29,12 @@
         // Ecoute la reponse de la connexion du mobile ( nouveau site ou reconnexion )
         socketService.on('mobileConnectedForMobile', function (data) {
 
+            console.log(data);
+
             if (data.status == 'MobileReConnected') {
 
                 console.log('mobile reconnected');
 
-                console.log(data);
                 sitesFactory.setCurrentSite(data.context);
                 $state.go('site.menu');
 
@@ -150,11 +151,14 @@
                 $ionicSideMenuDelegate.toggleRight();
             };
 
+            console.log(this.layout);
             this.gaugeHeight = 0;
             this.nbSections = this.layout.nbSections -1;
+            console.log(this.nbSections);
             this.currentSection = 0;
             this.ratio = Math.round(100/this.nbSections);
             this.linksHeight = this.nbSections * 100;
+            console.log(this.linksHeight);
             this.transformLinks = 0;
 
 
