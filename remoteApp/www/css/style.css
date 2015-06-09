@@ -6,23 +6,28 @@
     opacity: 0.5;
 }
 
-#links{
+#links {
 
     width: 100%;
-    height: 100%;
+    transform: translate3d(0, 0, 0);
+    transition: transform 500ms ease;
+    -webkit-transition: transform 500ms ease;
     position: absolute;
-    top:0;
-    left:0;
+    top: 0;
     z-index: -1;
+}
+
+#links .section {
+
+    height: 100%;
 
 }
 
-
-.scroll{
+.scroll {
     height: 100%;
 }
 
-.color-square{
+.color-square {
 
     width: 40px;
     height: 40px;
@@ -30,23 +35,25 @@
     border: 1px solid slategrey;
 
 }
-.color-square-input{
+
+.color-square-input {
     width: 40px;
     height: 40px;
     margin: 1px;
 }
-#progress-bar{
+
+#progress-bar {
 
     position: fixed;
-    top:0;
-    right:0;
+    top: 0;
+    right: 0;
     height: 100%;
     width: 10px;
     border-left: 1px solid gold;
 
 }
 
-#progress-bar #gauge{
+#progress-bar #gauge {
     width: 100%;
     background-color: royalblue;
     transition: height 500ms ease;

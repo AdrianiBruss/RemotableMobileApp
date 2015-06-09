@@ -114,17 +114,19 @@
 
                 switch (dir){
                     case 'up':
-                        actionsService.swipeDirection('up');
-
-                        if (self.gaugeHeight > 0){
+                        if (self.currentSection > 0){
+                            actionsService.swipeDirection('up');
                             self.gaugeHeight -= self.ratio;
+                            self.currentSection -=1;
+                            self.transformLinks -= 100
                         }
                         break;
                     case 'down':
-                        actionsService.swipeDirection('down');
-
-                        if (self.gaugeHeight < 100){
+                        if (self.currentSection < self.nbSections){
+                            actionsService.swipeDirection('down');
                             self.gaugeHeight += self.ratio;
+                            self.currentSection +=1;
+                            self.transformLinks += 100
                         }
                         break;
                     case 'left':
@@ -149,15 +151,12 @@
             };
 
             this.gaugeHeight = 0;
-            this.windowHeight = 0;
+            this.nbSections = this.layout.nbSections -1;
+            this.currentSection = 0;
+            this.ratio = Math.round(100/this.nbSections);
+            this.linksHeight = this.nbSections * 100;
+            this.transformLinks = 0;
 
-            //this.ratio = Math.round(1/(this.menu.bodyHeight / data.height) * 100);
-
-            //socketService.on('windowHeight', function(data){
-            //
-            //    self.ratio = Math.round(1/(self.menu.bodyHeight / data.height) * 100);
-            //
-            //})
 
         }]);
 

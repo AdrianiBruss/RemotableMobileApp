@@ -5,14 +5,15 @@
         </button>
     </ion-nav-buttons>
     <ion-content class="has-header padding" scroll="false">
-        <!--<div id="slider" on-swipe-up="site.swipe('up')" on-swipe-down="site.swipe('down')"-->
-             <!--on-swipe-left="site.swipe('left')" on-swipe-right="site.swipe('right')">-->
-        <!--</div>-->
-        {{site}}
-        <div id="links">
-            <!--<div class="link" ng-repeat="link in site.layout">-->
-                <!--<div class="item" ng-class="'section-'+link.section">{{link.text}}</div>-->
-            <!--</div>-->
+        <div id="slider" on-swipe-up="site.swipe('up')" on-swipe-down="site.swipe('down')"
+             on-swipe-left="site.swipe('left')" on-swipe-right="site.swipe('right')">
+        </div>
+        <!--{{site.layout.layout}}-->
+       <!--{{site.nbSections}}-->
+        <div id="links" ng-style="{'height': site.linksHeight + '%', 'transform':'translate3d(0, -'+site.transformLinks+'%, 0)' }">
+            <div class="section" ng-class="'section-'+$index" ng-repeat="link in site.layout.layout">
+                <div class="btn" ng-repeat="l in link">{{l.text}}</div>
+            </div>
         </div>
         <div id="progress-bar" class="padding-top">
             <div id="gauge" class="padding-top" ng-style="{ 'height': site.gaugeHeight + '%' }"></div>
