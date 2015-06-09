@@ -8,66 +8,46 @@
     var app = angular.module('controllers', []);
 
     /**
-     * MainController for Home Page and AddSite Page
+     * HomeController for Home Page
      */
     app.controller('homeCtrl', ['$state', 'sitesFactory', 'socketService', function ($state, sitesFactory, socketService) {
 
         // ------------------------------------------------------
         // Home Page
-        var self = this;
 
         // Socket initialisation
         socketService.init();
 
+
+        var self = this;
+        this.sites = {};
+
+
         // Récupération des sites dans le localStorage
         this.sites = sitesFactory.getSites();
-
-
-        // Ouverture d'un site
-        this.openSite = function (site) {
-            sitesFactory.connectSite(site);
-            sitesFactory.setCurrentSite(site);
-            $state.go('site.menu');
-        };
-
-        // Suppression d'un site
-        this.deleteSite = function (site) {
-
-            socketService.emit('deleteMobile', site, function (data) {
-
-                var deleteSitePromise = sitesFactory.deleteFromLocal(site);
-                deleteSitePromise.then(function (result) {
-
-                    self.sites = result;
-
-                })
-
-            })
-        };
-
-        // Ajout d'un site
-        this.addSitesButton = function () {
-            $state.go('addSite');
-        };
-
 
         // Ecoute la reponse de la connexion du mobile ( nouveau site ou reconnexion )
         socketService.on('mobileConnectedForMobile', function (data) {
 
-            if (data == 'MobileReConnected') {
+            if (data.status == 'MobileReConnected') {
 
                 console.log('mobile reconnected');
-                sitesFactory.setCurrentSite(data);
+
+                console.log(data);
+                sitesFactory.setCurrentSite(data.context);
+                $state.go('site.menu');
 
             } else {
 
-                var addSitePromise = sitesFactory.addToLocal(data);
+                console.log('premiere connexion');
+
+                var addSitePromise = sitesFactory.addToLocal(data.context);
                 addSitePromise.then(function (result) {
 
                     self.sites = result;
 
                     //ajouter au service le site courant
-                    sitesFactory.setCurrentSite(data);
+                    sitesFactory.setCurrentSite(data.context);
 
                     $state.go('site.menu');
 
@@ -79,6 +59,33 @@
         });
 
 
+        // Ouverture d'un site
+        this.openSite = function (site) {
+            sitesFactory.connectSite(site);
+        };
+
+        // Suppression d'un site
+        this.deleteSite = function (site) {
+
+            console.log(site);
+
+            socketService.emit('deleteMobile', site, function (data) {
+
+                var deleteSitePromise = sitesFactory.deleteFromLocal(site);
+                deleteSitePromise.then(function (result) {
+
+                    //self.sites = result;
+
+                })
+
+            })
+        };
+
+        // Ajout d'un site
+        this.addSitesButton = function () {
+            $state.go('addSite');
+        };
+
     }]);
 
 
@@ -88,33 +95,48 @@
     app.controller('siteCtrl', ['$scope', '$state', '$ionicSideMenuDelegate', 'actionsService', 'socketService', 'sitesFactory',
         function ($scope, $state, $ionicSideMenuDelegate, actionsService, socketService, sitesFactory) {
 
+
             this.backToHome = function () {
                 $state.go('home');
             };
 
             // -------------------------------------------------
             var self = this;
-            this.menu = sitesFactory.getCurrentSite();
-            if (this.menu == null) {
+            this.layout = sitesFactory.getCurrentSite();
+
+            if (this.layout == null) {
                 $state.go('home');
             }
             
 
             // -------------------------------------------------
-            this.swipeUp = function () {
-                actionsService.swipeDirection('up');
+            this.swipe = function (dir) {
 
-                if (self.gaugeHeight > 0){
-                    self.gaugeHeight -= self.ratio;
+                switch (dir){
+                    case 'up':
+                        actionsService.swipeDirection('up');
+
+                        if (self.gaugeHeight > 0){
+                            self.gaugeHeight -= self.ratio;
+                        }
+                        break;
+                    case 'down':
+                        actionsService.swipeDirection('down');
+
+                        if (self.gaugeHeight < 100){
+                            self.gaugeHeight += self.ratio;
+                        }
+                        break;
+                    case 'left':
+                        actionsService.swipeDirection('left');
+                        break;
+                    case 'right':
+                        actionsService.swipeDirection('right');
+                        break;
+
                 }
 
-            };
-            this.swipeDown = function () {
-                actionsService.swipeDirection('down');
 
-                if (self.gaugeHeight < 100){
-                    self.gaugeHeight += self.ratio;
-                }
             };
 
             // -------------------------------------------------
@@ -128,13 +150,14 @@
 
             this.gaugeHeight = 0;
             this.windowHeight = 0;
-            this.ratio = 0;
 
-            socketService.on('windowHeight', function(data){
+            //this.ratio = Math.round(1/(this.menu.bodyHeight / data.height) * 100);
 
-                self.ratio = Math.round(1/(self.menu.bodyHeight / data.height) * 100);
-
-            })
+            //socketService.on('windowHeight', function(data){
+            //
+            //    self.ratio = Math.round(1/(self.menu.bodyHeight / data.height) * 100);
+            //
+            //})
 
         }]);
 

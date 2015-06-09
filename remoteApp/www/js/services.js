@@ -71,12 +71,7 @@
 
         function connectionToSite(hash) {
 
-            //console.log(data.hash);
-
             socketService.emit('mobileConnection', hash, function (data) {
-
-                console.log(data);
-
             });
 
         }
@@ -191,7 +186,6 @@
 
     }]);
 
-
     app.service('socketService', ['$rootScope', function ($rootScope) {
 
         var socket;
@@ -199,9 +193,9 @@
         return {
             init: function () {
                 //socket = io('ws://' + url + '');
-                socket = io('ws://192.168.20.253:3303');
+                //socket = io('ws://192.168.20.253:3303');
                 //socket = io('ws://192.168.10.16:3303');
-                //socket = io('ws://192.168.10.17:3303');
+                socket = io('ws://192.168.10.17:3303');
             },
             on: function (eventName, callback) {
                 socket.on(eventName, function () {

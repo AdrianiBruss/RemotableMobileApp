@@ -5,12 +5,17 @@
         </button>
     </ion-nav-buttons>
     <ion-content class="has-header padding" scroll="false">
-        {{site.menu}}
-        <!--<div id="slider" on-swipe-up="site.swipeUp()" on-swipe-down="site.swipeDown()">-->
+        <!--<div id="slider" on-swipe-up="site.swipe('up')" on-swipe-down="site.swipe('down')"-->
+             <!--on-swipe-left="site.swipe('left')" on-swipe-right="site.swipe('right')">-->
         <!--</div>-->
+        {{site}}
+        <div id="links">
+            <!--<div class="link" ng-repeat="link in site.layout">-->
+                <!--<div class="item" ng-class="'section-'+link.section">{{link.text}}</div>-->
+            <!--</div>-->
+        </div>
         <div id="progress-bar" class="padding-top">
             <div id="gauge" class="padding-top" ng-style="{ 'height': site.gaugeHeight + '%' }"></div>
-
         </div>
     </ion-content>
 </ion-view>

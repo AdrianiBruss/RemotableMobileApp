@@ -19,7 +19,7 @@
         </header>
         <ion-content class="has-header">
             <ul class="list">
-                <li ng-repeat="m in site.menu.menu" ng-click="site.openPage(m.url)">
+                <li ng-repeat="m in site.layout.menu" ng-click="site.openPage(m.url)">
                     <a href="#" menu-toggle="right" class="item" nav-clear>{{m.name}}</a>
                 </li>
             </ul>
