@@ -195,8 +195,8 @@
                 //socket = io('ws://' + url + '');
                 //socket = io('ws://192.168.20.253:3303');
                 //socket = io('ws://192.168.10.16:3303');
-                //socket = io('ws://192.168.10.17:3303');
-                socket = io('ws://remote-cloudbruss.rhcloud.com:8000');
+                socket = io('ws://192.168.10.17:3303');
+                //socket = io('ws://remote-cloudbruss.rhcloud.com:8000');
             },
             on: function (eventName, callback) {
                 socket.on(eventName, function () {

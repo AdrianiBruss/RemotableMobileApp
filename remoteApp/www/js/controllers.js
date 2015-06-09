@@ -108,27 +108,26 @@
             if (this.layout == null) {
                 $state.go('home');
             }
-            
+
+            this.gaugeHeight = 0;
+            this.nbSections = this.layout.nbSections;
+            this.currentSection = 1;
+            this.ratio = Math.round(100 / (this.nbSections - 1));
+            this.linksHeight = this.nbSections * 100;
+            this.transformLinks = 0;
+
 
             // -------------------------------------------------
             this.swipe = function (dir) {
 
-                switch (dir){
+                switch (dir) {
                     case 'up':
-                        if (self.currentSection > 0){
                             actionsService.swipeDirection('up');
-                            self.gaugeHeight -= self.ratio;
-                            self.currentSection -=1;
-                            self.transformLinks -= 100
-                        }
+                            self.changeSection(self.currentSection -1);
                         break;
                     case 'down':
-                        if (self.currentSection < self.nbSections){
                             actionsService.swipeDirection('down');
-                            self.gaugeHeight += self.ratio;
-                            self.currentSection +=1;
-                            self.transformLinks += 100
-                        }
+                            self.changeSection(self.currentSection + 1);
                         break;
                     case 'left':
                         actionsService.swipeDirection('left');
@@ -142,24 +141,43 @@
 
             };
 
-            // -------------------------------------------------
             this.openPage = function (url) {
                 socketService.emit('changeLinkMobile', url);
+
             };
 
             this.toggleRight = function () {
                 $ionicSideMenuDelegate.toggleRight();
+
             };
 
-            console.log(this.layout);
-            this.gaugeHeight = 0;
-            this.nbSections = this.layout.nbSections -1;
-            console.log(this.nbSections);
-            this.currentSection = 0;
-            this.ratio = Math.round(100/this.nbSections);
-            this.linksHeight = this.nbSections * 100;
-            console.log(this.linksHeight);
-            this.transformLinks = 0;
+            this.changeSection = function (nextIndex) {
+
+                var diff = Math.abs(nextIndex - self.currentSection);
+                
+                if (self.currentSection > nextIndex && self.currentSection > 1) {
+
+                    self.currentSection = nextIndex;
+                    self.gaugeHeight -= self.ratio * diff;
+                    self.transformLinks -= 100 * diff;
+
+                } else if (self.currentSection < nextIndex && self.currentSection < self.nbSections) {
+
+                    self.currentSection = nextIndex;
+                    self.gaugeHeight += self.ratio * diff;
+                    self.transformLinks += 100 * diff;
+
+                }
+
+            };
+
+            // -------------------------------------------------
+
+            socketService.on('changeSectionMobile', function (data) {
+
+                self.changeSection(data.section);
+
+            });
 
 
         }]);
