@@ -1,23 +1,57 @@
-<ion-view title="RemoteApp" ng-controller="siteCtrl as site">
+<ion-view title="RemoteApp" ng-controller="siteCtrl as site" cache-view="false">
     <ion-nav-buttons side="primary">
         <button class="button" ng-click="site.backToHome()">
             <i class="ion-arrow-left-c"></i> Back
         </button>
     </ion-nav-buttons>
-    <ion-content class="has-header padding" scroll="false">
-        <div id="slider" on-swipe-up="site.swipe('up')" on-swipe-down="site.swipe('down')"
-             on-swipe-left="site.swipe('left')" on-swipe-right="site.swipe('right')">
+    <ion-content class="has-header" scroll="false">
+
+        <div id="commands">
+
+            <!-- gallery commands-->
+            <div class="gallery-commands" ng-show="site.layout.layout[site.currentSection - 1][0].type == 'Gallery'">
+                <div class="gallery-arrow left-arrow" ng-click="site.galleryRemote('left')"></div>
+                <div class="gallery-arrow right-arrow" ng-click="site.galleryRemote('right')"></div>
+            </div>
+
+            <!-- DraggableSlider commands -->
+            <div ng-show="site.layout.layout[site.currentSection - 1][0].type == 'DraggableSlider' " class="dragSlider"
+                 on-drag-right="site.sliderDrag('right')" on-drag-left="site.sliderDrag('left')"
+                 on-release="site.dragRelease()"
+                 ng-style="{'transform':'translate3d('+site.drag+'%, -50%, 0)', '-webkit-transform':'translate3d('+site.drag+'%, -50%, 0)'}">
+
+            </div>
+
+            <!-- VideoRemoteCommands -->
+            <div class="video-commands" ng-show="site.layout.layout[site.currentSection - 1][0].type == 'video'">
+                <div class="video-mute" ng-class="site.videoMuteState" ng-click="site.videoCommand('play')"></div>
+                <div class="video-play" ng-class="site.videoPlayState" ng-click="site.videoCommand('mute')"></div>
+                <div class="video-fullscreen" ng-class="site.videoScreenState" ng-click="site.videoCommand('fullscreen')"></div>
+            </div>
+
+
         </div>
-        <!--{{site.layout.layout}}-->
-        <!--{{site.nbSections}}-->
-        <div id="links"
-             ng-style="{'height': site.linksHeight + '%', 'transform':'translate3d(0, -'+site.transformLinks+'%, 0)', '-webkit-transform':'translate3d(0, -'+site.transformLinks+'%, 0)' }">
-            <div class="section" ng-class="'section-'+$index" ng-repeat="link in site.layout.layout">
-                <div class="btn" ng-repeat="l in link">{{l.text}}</div>
+        <div id="links" on-swipe-up="site.swipe('up')" on-swipe-down="site.swipe('down')"
+             on-swipe-left="site.swipe('left')" on-swipe-right="site.swipe('right')"
+             on-drag-up="site.dragSurface('up')" on-drag-down="site.dragSurface('down')"
+             on-drag-left="site.dragSurface('left')" on-drag-right="site.dragSurface('right')"
+             ng-style="{'height': site.linksHeight + 'px', 'transform':'translate3d(0, -'+site.transformLinks+'px, 0)', '-webkit-transform':'translate3d(0, -'+site.transformLinks+'px, 0)' }">
+            <div class="section" ng-class="'section-'+$index" ng-style="{'height': site.sectionHeight + 'px'}" ng-repeat="link in site.layout.layout">
+
+                <button ng-if="l.type == 'link'" class="button button-block button-light" ng-repeat="l in link"
+                        ng-click="site.openPage(l.url)">
+                    {{l.text}}
+                </button>
+
+                <div ng-if="l.rotate == 'true'" class="rotate-icon-container" ng-repeat="l in link">
+                    <div class="icon-rotate"></div>
+                </div>
+
+                <h2 class="info-title" ng-if="l.type == 'info'" ng-repeat="l in link">{{l.text}}</h2>
             </div>
         </div>
-        <div id="progress-bar" class="padding-top">
-            <div id="gauge" class="padding-top" ng-style="{ 'height': site.gaugeHeight + '%' }"></div>
+        <div id="progress-bar">
+            <div id="gauge" ng-style="{ 'height': site.gaugeHeight + 'px' }"></div>
         </div>
     </ion-content>
 </ion-view>

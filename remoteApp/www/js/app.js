@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var app = angular.module('remoteApp', ['ionic', 'controllers', 'services', 'directives']);
+    var app = angular.module('remoteApp', ['ionic', 'controllers', 'services', 'directives', 'ngCordova']);
 
     app.run(function ($ionicPlatform, sitesFactory) {
         $ionicPlatform.ready(function () {

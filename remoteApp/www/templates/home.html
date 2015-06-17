@@ -1,4 +1,4 @@
-<ion-view title="RemoteApp" ng-controller="homeCtrl as m">
+<ion-view title="RemoteApp" ng-controller="homeCtrl as m" cache-view="false">
     <ion-nav-buttons side="primary">
         <button class="button" ng-click="m.addSitesButton()">
             <i class="ion-android-add"></i> Add a site
@@ -7,7 +7,7 @@
     <ion-content>
         <ion-list>
             <ion-item ng-repeat="site in m.sites" ng-click="m.openSite(site)">
-                <img ng-src="../img/{{site.favicon}}" alt="" height="30" width="30"/>
+                <img ng-src="img/{{site.favicon}}" alt="" height="30" width="30"/>
                 {{site.title}}
                 <ion-option-button class="button-assertive"
                                    ng-click="m.deleteSite(site)">

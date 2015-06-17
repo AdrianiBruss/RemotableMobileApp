@@ -35,25 +35,32 @@
 
                 console.log('mobile reconnected');
 
+                console.log(data.context);
                 sitesFactory.setCurrentSite(data.context);
                 $state.go('site.menu');
 
-            } else {
+            } else if (data.status == 'NewConnection') {
 
                 console.log('premiere connexion');
 
                 var addSitePromise = sitesFactory.addToLocal(data.context);
                 addSitePromise.then(function (result) {
 
-                    self.sites = result;
-
                     //ajouter au service le site courant
+                    console.log(data.context);
                     sitesFactory.setCurrentSite(data.context);
+
+                    self.sites = result;
 
                     $state.go('site.menu');
 
                 });
 
+
+            }else{
+
+                sitesFactory.setCurrentSite(data.context);
+                $state.go('site.menu');
 
             }
 
@@ -75,7 +82,8 @@
                 var deleteSitePromise = sitesFactory.deleteFromLocal(site);
                 deleteSitePromise.then(function (result) {
 
-                    //self.sites = result;
+
+                    self.sites = result;
 
                 })
 
@@ -93,8 +101,8 @@
     /**
      * Controller for main site page
      */
-    app.controller('siteCtrl', ['$scope', '$state', '$ionicSideMenuDelegate', 'actionsService', 'socketService', 'sitesFactory',
-        function ($scope, $state, $ionicSideMenuDelegate, actionsService, socketService, sitesFactory) {
+    app.controller('siteCtrl', ['$scope', '$state', '$ionicSideMenuDelegate', 'actionsService', 'socketService', 'sitesFactory', '$cordovaDeviceOrientation',
+        function ($scope, $state, $ionicSideMenuDelegate, actionsService, socketService, sitesFactory, $cordovaDeviceOrientation) {
 
 
             this.backToHome = function () {
@@ -112,8 +120,9 @@
             this.gaugeHeight = 0;
             this.nbSections = this.layout.nbSections;
             this.currentSection = 1;
-            this.ratio = Math.round(100 / (this.nbSections - 1));
-            this.linksHeight = this.nbSections * 100;
+            this.sectionHeight = $(window).height();
+            this.ratio = this.sectionHeight / ( this.nbSections -1 ) ;
+            this.linksHeight = this.nbSections * this.sectionHeight;
             this.transformLinks = 0;
 
 
@@ -122,12 +131,12 @@
 
                 switch (dir) {
                     case 'up':
-                            actionsService.swipeDirection('up');
-                            self.changeSection(self.currentSection -1);
+                        actionsService.swipeDirection('up');
+                        self.changeSection(self.currentSection - 1);
                         break;
                     case 'down':
-                            actionsService.swipeDirection('down');
-                            self.changeSection(self.currentSection + 1);
+                        actionsService.swipeDirection('down');
+                        self.changeSection(self.currentSection + 1);
                         break;
                     case 'left':
                         actionsService.swipeDirection('left');
@@ -154,18 +163,18 @@
             this.changeSection = function (nextIndex) {
 
                 var diff = Math.abs(nextIndex - self.currentSection);
-                
+
                 if (self.currentSection > nextIndex && self.currentSection > 1) {
 
                     self.currentSection = nextIndex;
                     self.gaugeHeight -= self.ratio * diff;
-                    self.transformLinks -= 100 * diff;
+                    self.transformLinks -= self.sectionHeight * diff;
 
                 } else if (self.currentSection < nextIndex && self.currentSection < self.nbSections) {
 
                     self.currentSection = nextIndex;
                     self.gaugeHeight += self.ratio * diff;
-                    self.transformLinks += 100 * diff;
+                    self.transformLinks += self.sectionHeight * diff;
 
                 }
 
@@ -178,6 +187,170 @@
                 self.changeSection(data.section);
 
             });
+
+
+            // -------------------------------------------------
+
+            this.orientationMobile = 'portrait';
+
+            window.onorientationchange = orientationDevice;
+
+            function orientationDevice() {
+
+                console.log('orientation changed');
+                var data = {};
+                data.section = self.currentSection;
+
+                switch (window.orientation) {
+                    case -90:
+                    case 90:
+                        data.orientation = 'landscape';
+                        self.orientationMobile = 'landscape';
+                        socketService.emit('changeOrientationMobile', data);
+                        break;
+                    default:
+                        data.orientation = 'portrait';
+                        self.orientationMobile = 'portrait';
+                        socketService.emit('changeOrientationMobile', data);
+                        break;
+                }
+
+            }
+
+            orientationDevice();
+
+
+            // -------------------------------------------------
+            this.galleryRemote = function (direction) {
+
+                var data = {};
+                data.arrow = direction;
+                data.section = self.currentSection;
+                socketService.emit('galleryRemoteMobile', data);
+
+            };
+
+
+            // -------------------------------------------------
+
+            this.sliderDrag = function (direction) {
+
+                if (direction == 'right') {
+
+                    if (self.drag < 200) {
+                        self.drag += 5;
+                        self.dataDrag.drag = self.drag;
+                        self.dataDrag.direction = direction;
+                        self.dataDrag.section = self.currentSection;
+                        socketService.emit('sliderDraggableMobile', self.dataDrag);
+                    }
+
+                } else if (direction == 'left') {
+                    if (self.drag > -200) {
+                        self.drag -= 5;
+                        self.dataDrag.drag = self.drag;
+                        self.dataDrag.direction = direction;
+                        self.dataDrag.section = self.currentSection;
+                        socketService.emit('sliderDraggableMobile', self.dataDrag);
+                    }
+                }
+            };
+
+            this.dragRelease = function () {
+
+                self.drag = -50;
+
+            };
+
+            // -------------------------------------------------
+            // DragSurface
+
+            this.dragUpDown = 0;
+            this.dragLeftRight = 0;
+            this.dataDrag = {};
+            this.dragSurface = function (direction) {
+
+                //if (direction == 'right'){
+
+                //    if (self.dragLeftRight < 200){
+                //        self.dragLeftRight += 5;
+                //        self.dataDrag.drag = self.dragLeftRight;
+                //        self.dataDrag.direction = direction;
+                //        self.dataDrag.section = self.currentSection;
+                //        socketService.emit('sliderDraggableMobile', self.dataDrag);
+                //    }
+                //
+                //}else if (direction == 'left'){
+                //    if (self.dragLeftRight > -200){
+                //        self.dragLeftRight -= 5;
+                //        self.dataDrag.drag = self.dragLeftRight;
+                //        self.dataDrag.direction = direction;
+                //        self.dataDrag.section = self.currentSection;
+                //        socketService.emit('sliderDraggableMobile', self.dataDrag);
+                //    }
+
+                if (direction == 'up') {
+
+                    if (self.dragUpDown > 0) {
+                        self.dragUpDown -= 1;
+                        self.dataDrag.drag = self.dragUpDown;
+                        self.dataDrag.direction = direction;
+                        self.dataDrag.section = self.currentSection;
+                        socketService.emit('sliderDraggableMobile', self.dataDrag);
+                    }
+
+                }
+                else if (direction == 'down') {
+
+                    if (self.dragUpDown < 31) {
+                        self.dragUpDown += 1;
+                        self.dataDrag.drag = self.dragUpDown;
+                        self.dataDrag.direction = direction;
+                        self.dataDrag.section = self.currentSection;
+                        socketService.emit('sliderDraggableMobile', self.dataDrag);
+                    }
+
+                }
+
+            };
+
+
+            // -------------------------------------------------
+            // Video
+
+            this.videoPlayState = 'pauseVideo';
+            this.videoMuteState = 'unMute';
+            this.videoScreenState = 'unfullscreen';
+
+            this.videoCommand = function(command){
+
+                var data = {};
+
+                switch ( command ){
+
+                    case 'play':
+                        self.videoPlayState == 'pauseVideo' ? self.videoPlayState = 'playVideo' : self.videoPlayState = 'pauseVideo';
+                        data.command = self.videoPlayState;
+                        break;
+                    case 'mute':
+                        self.videoMuteState == 'mute' ? self.videoMuteState = 'unMute' : self.videoMuteState = 'mute';
+                        data.command = self.videoMuteState;
+                        break;
+                    case 'fullscreen':
+                        self.videoScreenState == 'unfullscreen' ? self.videoScreenState = 'fullscreen' : self.videoScreenState = 'unfullscreen';
+                        data.command = self.videoScreenState;
+                        break;
+
+                }
+
+                data.section = self.currentSection;
+                socketService.emit('videoRemoteMobile', data);
+
+            };
+
+
+            //
+            //buttonRemoteMobile
 
 
         }]);
@@ -251,6 +424,7 @@
 
     }]);
 
-})();
+})
+();
 
 

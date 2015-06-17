@@ -45,7 +45,7 @@
         function saveSite(sites, data) {
 
             var site = {};
-            site.url = data.url;
+            site.url = data.name;
             site.menu = data.menu;
             site.title = data.title;
             site.hash = data.hash.toString();
@@ -78,7 +78,8 @@
 
         function addToLocal(data) {
 
-
+            local = getLocal();
+            websites = JSON.parse(local);
             //stocke dans le localStorage le site
             if (local == null) {
                 console.log('saving to localStorage .. ');
@@ -96,23 +97,29 @@
 
         function deleteFromLocal(data) {
 
-            var local = JSON.parse(localStorage.remotableSitesMobile);
+            var deleteLocal = JSON.parse(localStorage.getItem('remotableSitesMobile'));
 
-            if (local.length == 1) {
+            if (deleteLocal.length == 1) {
 
-                localStorage.removeItem('remotableSitesMobile');
+                console.log('one element');
+
+                deleteLocal.splice(0,1);
+
+                console.log(deleteLocal);
+
+                localStorage.setItem('remotableSitesMobile', JSON.stringify(deleteLocal));
 
             } else {
 
-                for (var i = 0; i < local.length; i++) {
+                for (var i = 0; i < deleteLocal.length; i++) {
 
-                    if (data.hash == local[i].hash) {
+                    if (data.hash == deleteLocal[i].hash) {
 
-                        local = local.slice(i + 1);
+                        deleteLocal.splice(i, 1);
                     }
 
                 }
-                localStorage.setItem('remotableSitesMobile', JSON.stringify(local));
+                localStorage.setItem('remotableSitesMobile', JSON.stringify(deleteLocal));
 
             }
 
@@ -195,8 +202,8 @@
                 //socket = io('ws://' + url + '');
                 //socket = io('ws://192.168.20.253:3303');
                 //socket = io('ws://192.168.10.16:3303');
-                socket = io('ws://192.168.10.17:3303');
-                //socket = io('ws://remote-cloudbruss.rhcloud.com:8000');
+                //socket = io('ws://192.168.10.17:3303');
+                socket = io('ws://remote-cloudbruss.rhcloud.com:8000');
             },
             on: function (eventName, callback) {
                 socket.on(eventName, function () {
