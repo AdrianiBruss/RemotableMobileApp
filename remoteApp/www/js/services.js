@@ -101,11 +101,7 @@
 
             if (deleteLocal.length == 1) {
 
-                console.log('one element');
-
                 deleteLocal.splice(0,1);
-
-                console.log(deleteLocal);
 
                 localStorage.setItem('remotableSitesMobile', JSON.stringify(deleteLocal));
 

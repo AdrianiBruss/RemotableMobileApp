@@ -75,8 +75,6 @@
         // Suppression d'un site
         this.deleteSite = function (site) {
 
-            console.log(site);
-
             socketService.emit('deleteMobile', site, function (data) {
 
                 var deleteSitePromise = sitesFactory.deleteFromLocal(site);
@@ -131,12 +129,12 @@
 
                 switch (dir) {
                     case 'up':
-                        actionsService.swipeDirection('up');
-                        self.changeSection(self.currentSection - 1);
-                        break;
-                    case 'down':
                         actionsService.swipeDirection('down');
                         self.changeSection(self.currentSection + 1);
+                        break;
+                    case 'down':
+                        actionsService.swipeDirection('up');
+                        self.changeSection(self.currentSection - 1);
                         break;
                     case 'left':
                         actionsService.swipeDirection('left');
@@ -221,12 +219,27 @@
 
 
             // -------------------------------------------------
-            this.galleryRemote = function (direction) {
+            this.currentSlide = 1;
+            this.galleryRemote = function (direction, nbSlides) {
 
                 var data = {};
                 data.arrow = direction;
                 data.section = self.currentSection;
                 socketService.emit('galleryRemoteMobile', data);
+
+                if (direction == 'right'){
+                    if (self.currentSlide >= nbSlides){
+                        self.currentSlide = 1;
+                    }else{
+                        self.currentSlide += 1;
+                    }
+                }else if (direction == 'left'){
+                    if (self.currentSlide <= 1){
+                        self.currentSlide = nbSlides;
+                    }else{
+                        self.currentSlide -= 1;
+                    }
+                }
 
             };
 

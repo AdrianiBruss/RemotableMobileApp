@@ -9,9 +9,13 @@
         <div id="commands">
 
             <!-- gallery commands-->
-            <div class="gallery-commands" ng-show="site.layout.layout[site.currentSection - 1][0].type == 'Gallery'">
-                <div class="gallery-arrow left-arrow" ng-click="site.galleryRemote('left')"></div>
-                <div class="gallery-arrow right-arrow" ng-click="site.galleryRemote('right')"></div>
+            <div class="gallery-commands" ng-show="site.layout.layout[site.currentSection - 1][0].type == 'gallery'">
+                <div class="gallery-arrow left-arrow"
+                     ng-click="site.galleryRemote('left', site.layout.layout[site.currentSection - 1][0].nbSlides)"></div>
+                <p>{{site.currentSlide}} / {{site.layout.layout[site.currentSection - 1][0].nbSlides}}</p>
+
+                <div class="gallery-arrow right-arrow"
+                     ng-click="site.galleryRemote('right', site.layout.layout[site.currentSection - 1][0].nbSlides)"></div>
             </div>
 
             <!-- DraggableSlider commands -->
@@ -26,7 +30,8 @@
             <div class="video-commands" ng-show="site.layout.layout[site.currentSection - 1][0].type == 'video'">
                 <div class="video-mute" ng-class="site.videoMuteState" ng-click="site.videoCommand('play')"></div>
                 <div class="video-play" ng-class="site.videoPlayState" ng-click="site.videoCommand('mute')"></div>
-                <div class="video-fullscreen" ng-class="site.videoScreenState" ng-click="site.videoCommand('fullscreen')"></div>
+                <div class="video-fullscreen" ng-class="site.videoScreenState"
+                     ng-click="site.videoCommand('fullscreen')"></div>
             </div>
 
 
@@ -36,7 +41,8 @@
              on-drag-up="site.dragSurface('up')" on-drag-down="site.dragSurface('down')"
              on-drag-left="site.dragSurface('left')" on-drag-right="site.dragSurface('right')"
              ng-style="{'height': site.linksHeight + 'px', 'transform':'translate3d(0, -'+site.transformLinks+'px, 0)', '-webkit-transform':'translate3d(0, -'+site.transformLinks+'px, 0)' }">
-            <div class="section" ng-class="'section-'+$index" ng-style="{'height': site.sectionHeight + 'px'}" ng-repeat="link in site.layout.layout">
+            <div class="section" ng-class="'section-'+$index" ng-style="{'height': site.sectionHeight + 'px'}"
+                 ng-repeat="link in site.layout.layout">
 
                 <button ng-if="l.type == 'link'" class="button button-block button-light" ng-repeat="l in link"
                         ng-click="site.openPage(l.url)">
