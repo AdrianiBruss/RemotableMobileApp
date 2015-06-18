@@ -32,9 +32,13 @@
   display: flex;
   display: -webkit-flex;
   flex-direction: column;
+  -webkit-flex-direction: column;
+  -webkit-box-orient: vertical;
+  padding-bottom: 43px;
 }
 #links .section .img-item {
   flex: 1;
+  -webkit-flex: 1;
   text-align: center;
   display: flex;
   display: -webkit-flex;
@@ -47,30 +51,31 @@
 }
 #links .section .element-link {
   flex: 1;
+  -webkit-flex: 1;
 }
 #links .section .element-link .element-open {
   width: 40px;
   height: 40px;
   background: url('../img/plus.svg') center no-repeat;
   transition: transform 500ms ease;
-  -webkit-transition: transform 500ms ease;
+  -webkit-transition: -webkit-transform 500ms ease;
   margin: 30px auto;
 }
 #links .section .element-link .element-open.close {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
 }
 #links .section .element-link .element-open-details {
   width: 20px;
   height: 20px;
   background: url('../img/plus.svg') center no-repeat;
   transition: transform 500ms ease;
-  -webkit-transition: transform 500ms ease;
+  -webkit-transition: -webkit-transform 500ms ease;
   margin: 20px auto;
 }
 #links .section .element-link .element-open-details.close {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
 }
 #links .section h2.info-title {
   text-align: center;
@@ -114,6 +119,7 @@
   display: inline-block;
   color: #FFF;
   flex: 3;
+  -webkit-flex: 3;
   height: 80px;
   text-align: center;
 }
@@ -127,6 +133,7 @@
   color: #FFF;
   text-align: center;
   flex: 1;
+  -webkit-flex: 1;
   font-size: 30px;
   line-height: 80px;
 }
@@ -148,41 +155,59 @@
 #commands .video-commands div {
   color: #FFF;
   display: inline-block;
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   margin: 10px;
 }
 #commands .video-commands div.video-play.pauseVideo {
   background: url('../img/play.svg') no-repeat center;
+  background-size: cover;
 }
 #commands .video-commands div.video-play.playVideo {
   background: url('../img/pause.svg') no-repeat center;
+  background-size: cover;
 }
 #commands .video-commands div.video-mute.unMute {
   background: url('../img/mute.svg') no-repeat center;
+  background-size: cover;
 }
 #commands .video-commands div.video-mute.mute {
   background: url('../img/unmute.svg') no-repeat center;
+  background-size: cover;
 }
 #commands .video-commands div.video-fullscreen.unfullscreen {
   background: url('../img/fullscreen.svg') no-repeat center;
+  background-size: cover;
 }
 #commands .video-commands div.video-fullscreen.fullscreen {
   background: url('../img/unfulscreen.svg') no-repeat center;
+  background-size: cover;
 }
 .scroll {
   height: 100%;
 }
-.color-square {
-  width: 40px;
-  height: 40px;
-  margin: 50px 10px;
-  border: 1px solid slategrey;
+.row-color {
+  display: block;
+  width: 215px;
+  margin: 50px auto;
 }
-.color-square-input {
+.row-color.empty-color {
+  width: 170px;
+}
+.row-color .color-square {
   width: 40px;
   height: 40px;
   margin: 1px;
+  border: 1px solid slategrey;
+  border-radius: 50%;
+  display: inline-block;
+}
+.row-color .color-square-input {
+  width: 40px;
+  height: 40px;
+  margin: 1px;
+  border-radius: 50%;
+  display: inline-block;
 }
 @media only screen and (orientation: landscape) {
   #commands {

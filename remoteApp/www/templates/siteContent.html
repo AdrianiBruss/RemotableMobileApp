@@ -1,7 +1,7 @@
 <ion-view title="RemoteApp" ng-controller="siteCtrl as site" cache-view="false">
     <ion-nav-buttons side="primary">
         <button class="button" ng-click="site.backToHome()">
-            <i class="ion-arrow-left-c"></i> Back
+            <i class="ion-arrow-left-c"></i> Retour
         </button>
     </ion-nav-buttons>
     <ion-content class="has-header" scroll="false">
@@ -28,8 +28,8 @@
 
             <!-- VideoRemoteCommands -->
             <div class="video-commands" ng-show="site.layout.layout[site.currentSection - 1][0].type == 'video'">
-                <div class="video-mute" ng-class="site.videoMuteState" ng-click="site.videoCommand('play')"></div>
-                <div class="video-play" ng-class="site.videoPlayState" ng-click="site.videoCommand('mute')"></div>
+                <div class="video-mute" ng-class="site.videoMuteState" ng-click="site.videoCommand('mute')"></div>
+                <div class="video-play" ng-class="site.videoPlayState" ng-click="site.videoCommand('play')"></div>
                 <div class="video-fullscreen" ng-class="site.videoScreenState"
                      ng-click="site.videoCommand('fullscreen')"></div>
             </div>

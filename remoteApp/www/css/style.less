@@ -38,7 +38,6 @@
     background-color: rgba(0,0,0,0.8);
     border-radius: 50%;
 
-
   }
 
   .section {
@@ -46,10 +45,14 @@
     display: flex;
     display: -webkit-flex;
     flex-direction: column;
+    -webkit-flex-direction: column;
+    -webkit-box-orient: vertical;
+    padding-bottom: 43px;
 
     .img-item{
 
       flex: 1;
+      -webkit-flex: 1;
       text-align: center;
       display: flex;
       display: -webkit-flex;
@@ -66,6 +69,7 @@
     .element-link{
 
       flex: 1;
+      -webkit-flex: 1;
 
       .element-open{
 
@@ -73,13 +77,13 @@
         height: 40px;
         background: url('../img/plus.svg') center no-repeat;
         transition: transform 500ms ease;
-        -webkit-transition: transform 500ms ease;
+        -webkit-transition: -webkit-transform 500ms ease;
         margin: 30px auto;
 
         &.close{
 
-          transform: rotate(45deg);
-          -webkit-transform: rotate(45deg);
+          transform: rotate(135deg);
+          -webkit-transform: rotate(135deg);
 
         }
 
@@ -91,13 +95,13 @@
         height: 20px;
         background: url('../img/plus.svg') center no-repeat;
         transition: transform 500ms ease;
-        -webkit-transition: transform 500ms ease;
+        -webkit-transition: -webkit-transform 500ms ease;
         margin: 20px auto;
 
         &.close{
 
-          transform: rotate(45deg);
-          -webkit-transform: rotate(45deg);
+          transform: rotate(135deg);
+          -webkit-transform: rotate(135deg);
 
         }
 
@@ -169,6 +173,7 @@
       display: inline-block;
       color: #FFF;
       flex: 3;
+      -webkit-flex: 3;
       height: 80px;
       text-align: center;
 
@@ -187,6 +192,7 @@
       color: #FFF;
       text-align: center;
       flex: 1;
+      -webkit-flex: 1;
       font-size: 30px;
       line-height: 80px;
     }
@@ -222,17 +228,19 @@
 
       color:#FFF;
       display: inline-block;
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
       margin: 10px;
 
       &.video-play{
 
         &.pauseVideo{
           background: url('../img/play.svg') no-repeat center;
+          background-size: cover;
         }
         &.playVideo{
           background: url('../img/pause.svg') no-repeat center;
+          background-size: cover;
         }
 
       }
@@ -242,12 +250,14 @@
         &.unMute{
 
           background: url('../img/mute.svg') no-repeat center;
+          background-size: cover;
 
         }
 
         &.mute{
 
           background: url('../img/unmute.svg') no-repeat center;
+          background-size: cover;
         }
 
       }
@@ -257,12 +267,14 @@
         &.unfullscreen{
 
           background: url('../img/fullscreen.svg') no-repeat center;
+          background-size: cover;
 
         }
 
         &.fullscreen{
 
           background: url('../img/unfulscreen.svg') no-repeat center;
+          background-size: cover;
         }
 
       }
@@ -281,20 +293,42 @@
 //------------------------------------------------------
 // Add Page
 
-.color-square {
+.row-color{
 
-  width: 40px;
-  height: 40px;
-  margin: 50px 10px;
-  border: 1px solid slategrey;
+  display: block;
+  width: 215px;
+  margin: 50px auto;
+
+  &.empty-color{
+
+    width: 170px;
+
+  }
+
+
+  .color-square {
+
+    width: 40px;
+    height: 40px;
+    margin: 1px;
+    border: 1px solid slategrey;
+    border-radius: 50%;
+    display: inline-block;
+
+  }
+
+  .color-square-input {
+    width: 40px;
+    height: 40px;
+    margin: 1px;
+    border-radius: 50%;
+    display: inline-block;
+
+  }
 
 }
 
-.color-square-input {
-  width: 40px;
-  height: 40px;
-  margin: 1px;
-}
+
 
 @media only screen and (orientation: landscape) {
 

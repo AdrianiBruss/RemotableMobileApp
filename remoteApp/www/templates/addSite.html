@@ -1,18 +1,19 @@
 <ion-view title="RemoteApp" ng-controller="addSiteCtrl as a" cache-view="false">
     <ion-nav-buttons side="primary">
         <button class="button" ng-click="a.backToHome()">
-            <i class="ion-arrow-left-c"></i> Back
+            <i class="ion-arrow-left-c"></i> Retour
         </button>
     </ion-nav-buttons>
     <ion-content scroll="false">
 
-        <div class="row">
-            <div class="col color-square" ng-repeat="k in [1,2,3,4]"
+        <div class="row-color empty-color">
+            <div class="color-square" ng-repeat="k in [1,2,3,4]"
                  ng-style="a.getColor($index)" ng-click="a.removeColors()"></div>
         </div>
-        <div class="row">
-            <div class="col color-square-input" ng-style="{'backgroundColor':'#{{s}}'}"
+        <div class="row-color">
+            <div class="color-square-input" ng-style="{'backgroundColor':'#{{s}}'}"
                  ng-repeat="s in a.colors track by $index" ng-click="a.addColor($index)"></div>
+
         </div>
         <!--<div class="row">-->
             <!--<div class="col color-square-input" ng-style="{'backgroundColor':'#{{s}}'}"-->
