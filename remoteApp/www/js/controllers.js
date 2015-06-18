@@ -99,16 +99,29 @@
     /**
      * Controller for main site page
      */
-    app.controller('siteCtrl', ['$scope', '$state', '$ionicSideMenuDelegate', 'actionsService', 'socketService', 'sitesFactory', '$cordovaDeviceOrientation',
-        function ($scope, $state, $ionicSideMenuDelegate, actionsService, socketService, sitesFactory, $cordovaDeviceOrientation) {
+    app.controller('siteCtrl', ['$scope', '$state', '$ionicSideMenuDelegate', 'actionsService', 'socketService', 'sitesFactory',
+        function ($scope, $state, $ionicSideMenuDelegate, actionsService, socketService, sitesFactory) {
 
+
+            var self = this;
+
+            // -------------------------------------------------
+            // Touch event listener
+            // -------------------------------------------------
+
+
+            // -------------------------------------------------
+            // back button
+            // -------------------------------------------------
 
             this.backToHome = function () {
                 $state.go('home');
             };
 
             // -------------------------------------------------
-            var self = this;
+            // Sections manager
+            // -------------------------------------------------
+
             this.layout = sitesFactory.getCurrentSite();
 
             if (this.layout == null) {
@@ -148,16 +161,19 @@
 
             };
 
+            // -------------------------------------------------
             this.openPage = function (url) {
                 socketService.emit('changeLinkMobile', url);
 
             };
 
+            // -------------------------------------------------
             this.toggleRight = function () {
                 $ionicSideMenuDelegate.toggleRight();
 
             };
 
+            // -------------------------------------------------
             this.changeSection = function (nextIndex) {
 
                 var diff = Math.abs(nextIndex - self.currentSection);
@@ -186,7 +202,8 @@
 
             });
 
-
+            // -------------------------------------------------
+            // Orientation manager
             // -------------------------------------------------
 
             this.orientationMobile = 'portrait';
@@ -219,6 +236,8 @@
 
 
             // -------------------------------------------------
+            // Gallery manager
+            // -------------------------------------------------
             this.currentSlide = 1;
             this.galleryRemote = function (direction, nbSlides) {
 
@@ -244,6 +263,8 @@
             };
 
 
+            // -------------------------------------------------
+            // Drag event manager
             // -------------------------------------------------
 
             this.sliderDrag = function (direction) {
@@ -329,7 +350,8 @@
 
 
             // -------------------------------------------------
-            // Video
+            // Video manager
+            // -------------------------------------------------
 
             this.videoPlayState = 'pauseVideo';
             this.videoMuteState = 'unMute';
@@ -361,9 +383,42 @@
 
             };
 
+            // -------------------------------------------------
+            // Elements Link manager
+            // -------------------------------------------------
 
-            //
-            //buttonRemoteMobile
+
+            this.elementLink = function(element, action){
+
+                var data = {};
+                data.section = self.currentSection;
+                data.action = action;
+
+                if (action == 'elementLink'){
+
+                    data.id = element.parent;
+                    element.state == 'close' ? element.state = 'open' : element.state = 'close';
+
+                }else{
+
+                    if (element.state == 'close'){
+
+                        element.state = 'open';
+                        data.id = element.open;
+
+
+                    }else if (element.state == 'open'){
+
+                        element.state = 'close';
+                        data.id = element.close;
+
+                    }
+
+                }
+
+                socketService.emit('buttonRemoteMobile', data);
+
+            };
 
 
         }]);

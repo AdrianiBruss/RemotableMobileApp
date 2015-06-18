@@ -41,6 +41,9 @@
              on-drag-up="site.dragSurface('up')" on-drag-down="site.dragSurface('down')"
              on-drag-left="site.dragSurface('left')" on-drag-right="site.dragSurface('right')"
              ng-style="{'height': site.linksHeight + 'px', 'transform':'translate3d(0, -'+site.transformLinks+'px, 0)', '-webkit-transform':'translate3d(0, -'+site.transformLinks+'px, 0)' }">
+
+            <!--<div class="cursor" ng-show="site.displayCursor.show" ng-style="{'top':site.displayCursor.Y+'px', 'left':site.displayCursor.X+'px'}"></div>-->
+
             <div class="section" ng-class="'section-'+$index" ng-style="{'height': site.sectionHeight + 'px'}"
                  ng-repeat="link in site.layout.layout">
 
@@ -54,6 +57,18 @@
                 </div>
 
                 <h2 class="info-title" ng-if="l.type == 'info'" ng-repeat="l in link">{{l.text}}</h2>
+
+
+                <div class="element-link" ng-if="l.type == 'elementLink'" ng-repeat="l in link">
+
+                    <div class="element-open" ng-click="site.elementLink(l, 'elementLink')" ng-class="{'close':l.state == 'open'}"></div>
+
+                    <div ng-show="l.state == 'open'" class="element-open-details" ng-class="{'close':el.state == 'open'}" ng-repeat="el in l.children"
+                         ng-click="site.elementLink(el, 'openDetails')">
+                    </div>
+
+                </div>
+
             </div>
         </div>
         <div id="progress-bar">

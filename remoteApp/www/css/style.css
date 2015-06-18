@@ -21,12 +21,51 @@
   top: 0;
   background-color: #ECF0F1;
 }
+#links .cursor {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+}
+#links .section {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+}
+#links .section .element-link {
+  flex: 1;
+}
+#links .section .element-link .element-open {
+  width: 40px;
+  height: 40px;
+  background: url('../img/plus.svg') center no-repeat;
+  transition: transform 500ms ease;
+  -webkit-transition: transform 500ms ease;
+  margin: 30px auto;
+}
+#links .section .element-link .element-open.close {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+#links .section .element-link .element-open-details {
+  width: 20px;
+  height: 20px;
+  background: url('../img/plus.svg') center no-repeat;
+  transition: transform 500ms ease;
+  -webkit-transition: transform 500ms ease;
+  margin: 20px auto;
+}
+#links .section .element-link .element-open-details.close {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
 #links .section h2.info-title {
   text-align: center;
   color: #6c7A89;
 }
 #links .section .button {
-  margin: 0 auto 10px auto;
+  margin: auto;
   width: 90%;
 }
 #links .section .rotate-icon-container {
