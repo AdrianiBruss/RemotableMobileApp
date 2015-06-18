@@ -163,7 +163,14 @@
 
             // -------------------------------------------------
             this.openPage = function (url) {
-                socketService.emit('changeLinkMobile', url);
+
+                var data = {};
+                if (url.type == 'imgLink'){
+                    data.id = url.id;
+                }else{
+                    data.link = url;
+                }
+                socketService.emit('changeLinkMobile', data);
 
             };
 

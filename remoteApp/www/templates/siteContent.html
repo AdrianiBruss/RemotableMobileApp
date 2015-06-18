@@ -58,6 +58,9 @@
 
                 <h2 class="info-title" ng-if="l.type == 'info'" ng-repeat="l in link">{{l.text}}</h2>
 
+                <div class="img-item" ng-if="l.type == 'imgLink'" ng-repeat="l in link" ng-click="site.openPage(l)">
+                    <p>{{l.text}}</p>
+                </div>
 
                 <div class="element-link" ng-if="l.type == 'elementLink'" ng-repeat="l in link">
 
